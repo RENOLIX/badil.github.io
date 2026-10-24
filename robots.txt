@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://renolix.github.io/badil.github.io/sitemap.xml
