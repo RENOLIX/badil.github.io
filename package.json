@@ -5,6 +5,7 @@
   "description": "BADEELDZ — boutique français/arabe",
   "scripts": {
     "dev": "node scripts/serve.mjs",
-    "check": "node --check app.js && node --check store.js && node --check scripts/serve.mjs"
+    "check": "node --check app.js && node --check store.js && node --check commerce.mjs && node --check admin/admin.mjs && node --check worker/index.mjs && node --check scripts/serve.mjs",
+    "test": "node --test --test-isolation=none scripts/order-rules.test.mjs"
   }
 }

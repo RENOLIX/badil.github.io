@@ -5,7 +5,7 @@
   const $$ = (selector) => [...document.querySelectorAll(selector)];
   const text = {
     fr: {
-      skip:'Aller au contenu', naturalUniverse:'La nature au quotidien', welcome:'Bienvenue chez BADEELDZ — البديل', menu:'Menu',
+      country:'Algérie', admin:'Administration', skip:'Aller au contenu', naturalUniverse:'La nature au quotidien', welcome:'Bienvenue chez BADEELDZ — البديل', menu:'Menu',
       search:'Rechercher un produit', searchShort:'Recherche', searchPlaceholder:'Rechercher un produit...', help:'Aide', wishlist:'Favoris', cart:'Panier', account:'Mon compte',
       allCategories:'Toutes les catégories', categories:'Catégories', about:'À propos', home:'Accueil', shop:'Boutique', products:'Produits',
       sideTitle:'La nature,<br>tout simplement.', sideDescription:'L’univers des huiles naturelles', discover:'Découvrir',
@@ -13,11 +13,11 @@
       emptyTitle:'Nos produits arrivent bientôt', emptyDescription:'Nous préparons notre sélection. Aucun produit n’est disponible pour le moment.', viewAll:'Voir toutes les catégories',
       serviceNatural:'Un univers naturel', serviceNaturalText:'Huiles, plantes et soins du quotidien', serviceSelection:'Une sélection soignée', serviceSelectionText:'Explorez les catégories BADEELDZ', serviceLanguage:'Dans votre langue', serviceLanguageText:'Français et arabe', servicePrivacy:'Votre vie privée', servicePrivacyText:'Parcourez en toute tranquillité',
       aboutText:'BADEELDZ — البديل, un univers d’huiles naturelles, d’herbes, d’épices et de soins. Bienvenue dans notre boutique.', usefulLinks:'Liens utiles', contact:'Nous contacter', privacy:'Confidentialité', rights:'Tous droits réservés.', close:'Fermer', continueBrowsing:'Continuer la visite', all:'Tous',
-      cartText:'Votre panier est vide.\nNos produits seront disponibles prochainement.', wishlistText:'Vous n’avez pas encore de favoris.\nVous pourrez ajouter vos produits préférés dès leur arrivée.', accountText:'L’espace client sera disponible à l’ouverture du catalogue.', helpText:'Les coordonnées et les informations de livraison seront disponibles prochainement.', privacyText:'Ce site ne collecte aucune donnée de commande ni de paiement. Seul votre choix de langue est conservé dans votre navigateur. Les polices sont chargées depuis Google Fonts.',
+      cartText:'Votre panier est vide.\nNos produits seront disponibles prochainement.', wishlistText:'Vous n’avez pas encore de favoris.\nVous pourrez ajouter vos produits préférés dès leur arrivée.', accountText:'L’espace client sera disponible à l’ouverture du catalogue.', helpText:'Contactez BADEELDZ en Algérie : 0550 94 97 95 ou 0776 22 22 94. Livraison à domicile ou en bureau. Livraison gratuite à Dellys dès 4 000 DA d’achat.', privacyText:'Les informations saisies lors de la commande sont enregistrées dans Firebase pour son traitement par BADEELDZ. Aucun numéro de carte bancaire n’est demandé. Le panier, les favoris et la langue sont conservés dans votre navigateur. Les comptes administrateurs sont protégés par Firebase Authentication.',
       noResults:'Aucun résultat', noResultsText:'Aucun produit ne correspond à votre recherche. Notre catalogue sera disponible prochainement.', categoryEmpty:'Aucun produit dans cette catégorie pour le moment.', slide:'Photo', of:'sur'
     },
     ar: {
-      skip:'انتقل إلى المحتوى', naturalUniverse:'الطبيعة في حياتك اليومية', welcome:'مرحباً بكم في البديل BADEELDZ', menu:'القائمة',
+      country:'الجزائر', admin:'الإدارة', skip:'انتقل إلى المحتوى', naturalUniverse:'الطبيعة في حياتك اليومية', welcome:'مرحباً بكم في البديل BADEELDZ', menu:'القائمة',
       search:'البحث عن منتج', searchShort:'بحث', searchPlaceholder:'ابحث عن منتج...', help:'المساعدة', wishlist:'المفضلة', cart:'السلة', account:'حسابي',
       allCategories:'جميع الفئات', categories:'فئات', about:'عن البديل', home:'الرئيسية', shop:'المتجر', products:'منتجات',
       sideTitle:'من الطبيعة،<br>بكل بساطة.', sideDescription:'اكتشف عالم الزيوت الطبيعية', discover:'اكتشف الآن',
@@ -25,7 +25,7 @@
       emptyTitle:'منتجاتنا قريباً', emptyDescription:'نحضّر لكم تشكيلتنا. لا توجد منتجات متاحة حالياً.', viewAll:'عرض جميع الفئات',
       serviceNatural:'عالم من الطبيعة', serviceNaturalText:'زيوت، نباتات وعناية يومية', serviceSelection:'اختيار بعناية', serviceSelectionText:'اكتشف فئات البديل', serviceLanguage:'باللغة التي تناسبك', serviceLanguageText:'العربية والفرنسية', servicePrivacy:'خصوصيتك أولاً', servicePrivacyText:'تصفح بكل راحة',
       aboutText:'البديل BADEELDZ، عالم من الزيوت الطبيعية والأعشاب والتوابل ومنتجات العناية. نرحب بكم في متجرنا.', usefulLinks:'روابط مفيدة', contact:'تواصل معنا', privacy:'سياسة الخصوصية', rights:'جميع الحقوق محفوظة.', close:'إغلاق', continueBrowsing:'متابعة التصفح', all:'الجميع',
-      cartText:'سلتك فارغة حالياً.\nستتوفر منتجاتنا قريباً.', wishlistText:'لا توجد منتجات في المفضلة بعد.\nيمكنك إضافة منتجاتك المفضلة عند وصولها.', accountText:'ستتوفر مساحة العملاء عند افتتاح الكتالوج.', helpText:'ستتوفر بيانات الاتصال ومعلومات التوصيل قريباً.', privacyText:'لا يجمع هذا الموقع بيانات الطلبات أو الدفع. يُحفظ اختيار اللغة فقط في متصفحك. يتم تحميل الخطوط من Google Fonts.',
+      cartText:'سلتك فارغة حالياً.\nستتوفر منتجاتنا قريباً.', wishlistText:'لا توجد منتجات في المفضلة بعد.\nيمكنك إضافة منتجاتك المفضلة عند وصولها.', accountText:'ستتوفر مساحة العملاء عند افتتاح الكتالوج.', helpText:'تواصل مع البديل في الجزائر على 0550 94 97 95 أو 0776 22 22 94. التوصيل إلى المنزل أو المكتب. توصيل مجاني إلى دلس ابتداءً من 4 000 دج.', privacyText:'تُحفظ بيانات الطلب في Firebase لمعالجتها من طرف البديل. لا نطلب أي معلومات عن البطاقة البنكية. تُحفظ السلة والمفضلة واللغة في متصفحك. حسابات الإدارة محمية بواسطة Firebase Authentication.',
       noResults:'لا توجد نتائج', noResultsText:'لا توجد منتجات تطابق بحثك. سيتوفر الكتالوج قريباً.', categoryEmpty:'لا توجد منتجات في هذه الفئة حالياً.', slide:'الصورة', of:'من'
     }
   };
@@ -66,7 +66,7 @@
     $('#category-strip').scrollLeft=0;
   }
   function renderSlides() {
-    $('#hero-slides').innerHTML=store.slides.map((slide,i)=>`<article class="hero-slide ${i===currentSlide?'is-active':''}" aria-hidden="${i!==currentSlide}" ${i!==currentSlide?'inert':''}><img src="${slide.image}" alt="${slide[language][2]}" width="1600" height="1000" ${i===0?'fetchpriority="high"':'loading="lazy"'}><div class="slide-copy"><span class="banner-eyebrow">BADEELDZ</span><${i===0?'h1':'h2'}>${slide[language][0]}</${i===0?'h1':'h2'}><p>${slide[language][1]}</p><a class="hero-cta" href="#catalog" data-category="${slide.category}">${t('discover')}${icon('chevron')}</a></div></article>`).join('');
+    $('#hero-slides').innerHTML=store.slides.map((slide,i)=>`<article class="hero-slide ${slide.campaign?'campaign':''} ${i===currentSlide?'is-active':''}" aria-hidden="${i!==currentSlide}" ${i!==currentSlide?'inert':''}><img src="${slide.imageLocalized?.[language]||slide.image}" alt="${slide[language][2]}" width="1600" height="1000" ${i===0?'fetchpriority="high"':'loading="lazy"'}>${slide.campaign?'<span class="delivery-motion-dot" aria-hidden="true"></span>':''}<div class="slide-copy ${slide.campaign?'sr-only':''}"><span class="banner-eyebrow">BADEELDZ</span><${i===0?'h1':'h2'}>${slide[language][0]}</${i===0?'h1':'h2'}><p>${slide[language][1]}</p><a class="hero-cta" href="#catalog" data-category="${slide.category}">${t('discover')}${icon('chevron')}</a></div></article>`).join('');
     $('#hero-dots').innerHTML=store.slides.map((_,i)=>`<button class="hero-dot" type="button" data-slide="${i}" aria-label="${t('slide')} ${i+1} ${t('of')} ${store.slides.length}" aria-current="${i===currentSlide}"></button>`).join('');
     updateSlideStatus();
   }
@@ -88,6 +88,7 @@
     stripButton.setAttribute('aria-pressed',String(categoryPaused));stripButton.setAttribute('aria-label',t(categoryPaused?'playCategories':'pauseCategories'));stripButton.innerHTML=icon(categoryPaused?'play':'pause');
   }
   function renderCatalog() {
+    window.BADIL_VIEW={language,category:selectedCategory,query:searchQuery};
     const cat=store.categories.find(c=>c.id===selectedCategory);
     $('#catalog-title').textContent=searchQuery?t('searchShort'):cat?cat[language]:t('products');
     $('#empty-title').textContent=searchQuery?t('noResults'):t('emptyTitle');
@@ -95,8 +96,10 @@
     $('#reset-catalog').hidden=!selectedCategory&&!searchQuery;
     const tabs=[{id:'',label:t('all')},...['natural-oils','herbs-spices'].map(id=>({id,label:store.categories.find(c=>c.id===id)[language]}))];
     $('#catalog-tabs').innerHTML=tabs.map(tab=>`<button type="button" data-filter="${tab.id}" aria-pressed="${tab.id===selectedCategory&&!searchQuery}">${tab.label}</button>`).join('');
+    window.BADIL_COMMERCE?.render(window.BADIL_VIEW);
   }
   function filterCategory(id) {
+    window.BADIL_COMMERCE?.resetPage();
     selectedCategory=id;searchQuery='';$('#site-search').value='';renderCatalog();
     if($('#category-dialog').open) $('#category-dialog').close();
     if($('#info-dialog').open) $('#info-dialog').close();
@@ -105,7 +108,7 @@
     const map={cart:['cart','cartText','bag'],wishlist:['wishlist','wishlistText','heart'],account:['account','accountText','user'],help:['contact','helpText','headset'],about:['about','aboutText','leaf'],privacy:['privacy','privacyText','shield']};
     const [title,body,ico]=map[kind];$('#info-title').textContent=t(title);$('#info-text').textContent=t(body);$('#info-icon').setAttribute('href',`#i-${ico}`);
   }
-  function openInfo(kind){activeInfo=kind;renderInfo(kind);$('#info-dialog').showModal();}
+  function openInfo(kind){if(kind==='account'){location.href='admin/';return;}if(window.BADIL_COMMERCE&&['cart','wishlist'].includes(kind)){window.BADIL_COMMERCE.open(kind);return;}activeInfo=kind;renderInfo(kind);$('#info-dialog').showModal();}
   function focusSearch(){
     if(matchMedia('(max-width:767px)').matches) $('.site-header').classList.add('search-open');
     window.scrollTo({top:0,behavior:reducedMotion.matches?'instant':'smooth'});$('#site-search').focus({preventScroll:true});

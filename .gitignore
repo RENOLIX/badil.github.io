@@ -4,3 +4,9 @@ Thumbs.db
 *.log
 .env*
 verification/
+.wrangler/
+.firebase/
+firebase-debug.log
+*-debug.log
+*service-account*.json
+*.pem
