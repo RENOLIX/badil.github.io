@@ -1,3 +1,5 @@
+import {stockChanges} from './inventory.mjs';
+import {productImages} from '../product-data.mjs';
 import locations from '../locations.json' with {type:'json'};
 import {normalizeProductInput,validateImageBytes,MAX_IMAGE_BYTES} from './products.mjs';
 import {mediaImageKey} from '../product-data.mjs';
@@ -44,8 +46,10 @@ async function googleToken(env){
 async function google(env,url,method='GET',body){
   const response=await fetch(url,{method,headers:{Authorization:`Bearer ${await googleToken(env)}`,'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});
   const result=await response.json().catch(()=>({}));
-  if(!response.ok){if(response.status===404)return null;if(response.status===409)throw new HttpError(409,'ALREADY_EXISTS','Cet élément existe déjà.');if(response.status===400){const message=result.error?.message||'';if(/EMAIL_EXISTS/.test(message))fail(409,'EMAIL_EXISTS','Cette adresse e-mail est déjà utilisée.');if(/INVALID_PASSWORD|WEAK_PASSWORD/.test(message))fail(400,'WEAK_PASSWORD','Le mot de passe doit contenir au moins 12 caractères.');}fail(502,'FIREBASE_ERROR','Firebase ne peut pas traiter cette opération pour le moment.');}return result;
+  if(!response.ok){if(response.status===404)return null;if(result.error?.status==='FAILED_PRECONDITION'||result.error?.status==='ABORTED')fail(409,'WRITE_CONFLICT','Les données ont changé. Réessayez.');if(response.status===409)throw new HttpError(409,'ALREADY_EXISTS','Cet élément existe déjà.');if(response.status===400){const message=result.error?.message||'';if(/EMAIL_EXISTS/.test(message))fail(409,'EMAIL_EXISTS','Cette adresse e-mail est déjà utilisée.');if(/INVALID_PASSWORD|WEAK_PASSWORD/.test(message))fail(400,'WEAK_PASSWORD','Le mot de passe doit contenir au moins 12 caractères.');}fail(502,'FIREBASE_ERROR','Firebase ne peut pas traiter cette opération pour le moment.');}return result;
 }
+async function snapshot(env,path){const raw=await google(env,FS+'/'+path);return raw?{raw,data:documentData(raw)}:null;}
+function inventoryWrites(changes,snapshots){return changes.map(change=>({update:{name:ROOT+'/products/'+change.productId,fields:fields({stock:change.stock,updatedAt:now()})},updateMask:{fieldPaths:['stock','updatedAt']},currentDocument:{updateTime:snapshots.find(s=>s?.data.id===change.productId).raw.updateTime}}));}
 async function getDoc(env,path){return documentData(await google(env,`${FS}/${path}`));}
 async function setDoc(env,path,data){await google(env,`${FS}/${path}`,'PATCH',{fields:fields(data)});return data;}
 async function createDoc(env,collection,id,data){await google(env,`${FS}/${collection}?documentId=${encodeURIComponent(id)}`,'POST',{fields:fields(data)});return data;}
@@ -95,54 +99,60 @@ export function normalizeCustomer(input){
 }
 export function calculateLines(input,products){
   if(!Array.isArray(input)||input.length<1||input.length>30)fail(400,'INVALID_CART','Le panier doit contenir entre 1 et 30 références.');
-  const used=new Set();return input.map(item=>{
+  const used=new Set();const lines=input.map(item=>{
     const product=products.find(p=>p.id===item.productId);const variant=product?.variants.find(v=>v.id===item.variantId);
     if(!product||!variant||product.available===false)fail(400,'PRODUCT_UNAVAILABLE','Un produit du panier n’est plus disponible.');
     if(!Number.isInteger(item.quantity)||item.quantity<1||item.quantity>50)fail(400,'INVALID_QUANTITY','Quantité invalide.');
     const key=`${product.id}:${variant.id}`;if(used.has(key))fail(400,'DUPLICATE_LINE','Regroupez les quantités d’un même produit.');used.add(key);
     return {productId:product.id,variantId:variant.id,name:product.name,variant:variant.label,quantity:item.quantity,unitPrice:variant.price,lineTotal:variant.price===null?null:variant.price*item.quantity,image:product.image};
-  });
+  });stockChanges(lines,products);return lines;
 }
 function publicOrder(order){return {id:order.id,reference:order.reference,status:order.status,subtotal:order.subtotal,knownSubtotal:order.knownSubtotal,deliveryFee:order.deliveryFee,total:order.total,requiresConfirmation:order.status==='needs_quote'};}
 async function submitOrder(request,env){
   const body=await readBody(request);if(body.website)fail(400,'INVALID_REQUEST','Requête invalide.');
   const key=clean(body.idempotencyKey,'identifiant',36,36);if(!/^[a-f0-9-]{36}$/i.test(key))fail(400,'INVALID_REQUEST','Identifiant invalide.');
-  const customer=normalizeCustomer(body.customer);const requestHash=await hash(JSON.stringify({customer,items:body.items}));
-  const existing=await getDoc(env,`orders/${key}`);if(existing){if(existing.requestHash!==requestHash)fail(409,'ORDER_CONFLICT','Cette demande a déjà été traitée.');return publicOrder(existing);}
+  const customer=normalizeCustomer(body.customer),requestHash=await hash(JSON.stringify({customer,items:body.items}));
+  const duplicate=async()=>{const old=await getDoc(env,'orders/'+key);if(old&&old.requestHash!==requestHash)fail(409,'ORDER_CONFLICT','Cette demande a déjà été traitée.');return old;};
+  const existing=await duplicate();if(existing)return publicOrder(existing);
   await quota(request,env,'order',8);
   if(!Array.isArray(body.items)||body.items.length<1||body.items.length>30)fail(400,'INVALID_CART','Panier invalide.');
   const ids=[...new Set(body.items.map(item=>item.productId))];if(ids.some(id=>typeof id!=='string'||!/^p-\d+$/.test(id)))fail(400,'INVALID_CART','Référence invalide.');
-  const [products,rate]=await Promise.all([Promise.all(ids.map(id=>getDoc(env,`products/${id}`))),getDoc(env,`deliveryRates/${customer.wilaya}`)]);const rates=rate?[rate]:[];
-  const items=calculateLines(body.items,products.filter(Boolean));const pending=items.some(i=>i.unitPrice===null);const knownSubtotal=items.reduce((sum,item)=>sum+(item.lineTotal||0),0);const subtotal=pending?null:knownSubtotal;const deliveryFee=resolveDelivery(customer,knownSubtotal,rates);const total=subtotal===null||deliveryFee===null?null:subtotal+deliveryFee;
-  if(total!==null&&body.quotedTotal!==null&&body.quotedTotal!==total)fail(409,'PRICE_CHANGED','Les tarifs ont été actualisés. Vérifiez votre panier avant de confirmer.',{subtotal,deliveryFee,total});
-  const status=pending||deliveryFee===null||body.quotedTotal===null?'needs_quote':'new';
-  const order={id:key,reference:`BD-${now().slice(2,10).replaceAll('-','')}-${key.slice(0,7).toUpperCase()}`,createdAt:now(),updatedAt:now(),status,customer,items,subtotal,knownSubtotal,deliveryFee,total,locale:body.locale==='fr'?'fr':'ar',paymentMethod:'cash_on_delivery',adminNotes:'',requestHash};
-  try{await createDoc(env,'orders',key,order);}catch(error){if(error.code!=='ALREADY_EXISTS')throw error;const duplicate=await getDoc(env,`orders/${key}`);if(duplicate?.requestHash!==requestHash)fail(409,'ORDER_CONFLICT','Demande déjà traitée.');return publicOrder(duplicate);}
-  return publicOrder(order);
+  for(let attempt=0;attempt<3;attempt++){
+    const [snapshots,rate]=await Promise.all([Promise.all(ids.map(id=>snapshot(env,'products/'+id))),getDoc(env,'deliveryRates/'+customer.wilaya)]),products=snapshots.filter(Boolean).map(s=>s.data);
+    const items=calculateLines(body.items,products),changes=stockChanges(items,products),pending=items.some(i=>i.unitPrice===null),knownSubtotal=items.reduce((sum,item)=>sum+(item.lineTotal||0),0),subtotal=pending?null:knownSubtotal,deliveryFee=resolveDelivery(customer,knownSubtotal,rate?[rate]:[]),total=subtotal===null||deliveryFee===null?null:subtotal+deliveryFee;
+    if(total!==null&&body.quotedTotal!==null&&body.quotedTotal!==total)fail(409,'PRICE_CHANGED','Les tarifs ont été actualisés. Vérifiez votre panier avant de confirmer.',{subtotal,deliveryFee,total});
+    const status=pending||deliveryFee===null||body.quotedTotal===null?'needs_quote':'new',order={id:key,reference:'BD-'+now().slice(2,10).replaceAll('-','')+'-'+key.slice(0,7).toUpperCase(),createdAt:now(),updatedAt:now(),status,customer,items,subtotal,knownSubtotal,deliveryFee,total,locale:body.locale==='fr'?'fr':'ar',paymentMethod:'cash_on_delivery',adminNotes:'',requestHash,stockState:'reserved',stockReservations:changes.map(({productId,quantity})=>({productId,quantity}))};
+    try{await commit(env,[{update:{name:ROOT+'/orders/'+key,fields:fields(order)},currentDocument:{exists:false}},...inventoryWrites(changes,snapshots)]);if(changes.length)await caches.default.delete(catalogCacheKey(request));return publicOrder(order);}
+    catch(error){if(!['ALREADY_EXISTS','WRITE_CONFLICT'].includes(error.code))throw error;const old=await duplicate();if(old)return publicOrder(old);if(attempt===2)fail(409,'STOCK_CHANGED','Le stock a changé. Actualisez votre panier et réessayez.');}
+  }
 }
 async function updateOrder(request,env,id,user){
-  const old=await getDoc(env,`orders/${id}`);if(!old)fail(404,'NOT_FOUND','Commande introuvable.');const body=await readBody(request);
-  const statuses=['new','needs_quote','confirmed','preparing','shipped','delivered','cancelled'];
-  if(body.status&&!statuses.includes(body.status))fail(400,'INVALID_STATUS','Statut invalide.');
-  const order={...old,updatedAt:now(),updatedBy:user.uid};
-  if(body.adminNotes!==undefined)order.adminNotes=clean(body.adminNotes,'note',0,2000);
-  if(body.deliveryFee!==undefined){if(!validPrice(body.deliveryFee))fail(400,'INVALID_PRICE','Frais de livraison invalides.');order.deliveryFee=body.deliveryFee;}
-  if(body.linePrices!==undefined){if(!Array.isArray(body.linePrices)||body.linePrices.length!==order.items.length||!body.linePrices.every(validPrice))fail(400,'INVALID_PRICE','Prix invalides.');order.items=order.items.map((item,i)=>({...item,unitPrice:body.linePrices[i],lineTotal:body.linePrices[i]===null?null:body.linePrices[i]*item.quantity}));}
-  order.knownSubtotal=order.items.reduce((s,i)=>s+(i.lineTotal||0),0);order.subtotal=order.items.some(i=>i.unitPrice===null)?null:order.knownSubtotal;order.total=order.subtotal===null||order.deliveryFee===null?null:order.subtotal+order.deliveryFee;
-  if(body.status){if(['confirmed','preparing','shipped','delivered'].includes(body.status)&&order.total===null)fail(400,'MISSING_PRICE','Renseignez tous les prix avant de confirmer la commande.');order.status=body.status;}
-  await setDoc(env,`orders/${id}`,order);return order;
+  const body=await readBody(request),statuses=['new','needs_quote','confirmed','preparing','shipped','delivered','cancelled'];if(body.status&&!statuses.includes(body.status))fail(400,'INVALID_STATUS','Statut invalide.');
+  for(let attempt=0;attempt<3;attempt++){
+    const previous=await snapshot(env,'orders/'+id);if(!previous)fail(404,'NOT_FOUND','Commande introuvable.');const old=previous.data,order={...old,updatedAt:now(),updatedBy:user.uid};
+    if(body.adminNotes!==undefined)order.adminNotes=clean(body.adminNotes,'note',0,2000);
+    if(body.deliveryFee!==undefined){if(!validPrice(body.deliveryFee))fail(400,'INVALID_PRICE','Frais de livraison invalides.');order.deliveryFee=body.deliveryFee;}
+    if(body.linePrices!==undefined){if(!Array.isArray(body.linePrices)||body.linePrices.length!==order.items.length||!body.linePrices.every(validPrice))fail(400,'INVALID_PRICE','Prix invalides.');order.items=order.items.map((item,i)=>({...item,unitPrice:body.linePrices[i],lineTotal:body.linePrices[i]===null?null:body.linePrices[i]*item.quantity}));}
+    order.knownSubtotal=order.items.reduce((s,i)=>s+(i.lineTotal||0),0);order.subtotal=order.items.some(i=>i.unitPrice===null)?null:order.knownSubtotal;order.total=order.subtotal===null||order.deliveryFee===null?null:order.subtotal+order.deliveryFee;
+    if(body.status){if(['confirmed','preparing','shipped','delivered'].includes(body.status)&&order.total===null)fail(400,'MISSING_PRICE','Renseignez tous les prix avant de confirmer la commande.');order.status=body.status;}
+    let changes=[],snapshots=[];const reservations=old.stockReservations||[],release=order.status==='cancelled'&&old.stockState==='reserved',reserve=order.status!=='cancelled'&&old.stockState==='released';
+    if(reservations.length&&(release||reserve)){snapshots=await Promise.all(reservations.map(r=>snapshot(env,'products/'+r.productId)));changes=stockChanges(reservations,snapshots.filter(Boolean).map(s=>s.data),release);if(reserve)order.stockReservations=changes.map(({productId,quantity})=>({productId,quantity}));}
+    if(release||reserve)order.stockState=release?'released':'reserved';
+    try{await commit(env,[{update:{name:previous.raw.name,fields:fields(order)},currentDocument:{updateTime:previous.raw.updateTime}},...inventoryWrites(changes,snapshots)]);if(changes.length)await caches.default.delete(catalogCacheKey(request));return order;}
+    catch(error){if(error.code!=='WRITE_CONFLICT'||attempt===2)throw error;}
+  }
 }
 async function saveProduct(request,env,user,id=null){
   allowRoles(user,['owner','admin','manager']);
   const body=await readBody(request),origin=new URL(request.url).origin;
-  let existing=null;
-  if(id){existing=await getDoc(env,'products/'+id);if(!existing)fail(404,'NOT_FOUND','Produit introuvable.');}
+  let existing=null,previous=null;
+  if(id){previous=await snapshot(env,'products/'+id);existing=previous?.data;if(!existing)fail(404,'NOT_FOUND','Produit introuvable.');}
   else{id=body.id||('p-'+Date.now()+String(crypto.getRandomValues(new Uint32Array(1))[0]%1000000).padStart(6,'0'));if(!/^p-\d{16,24}$/.test(id))fail(400,'INVALID_PRODUCT_ID','Identifiant du produit invalide.');const duplicate=await getDoc(env,'products/'+id);if(duplicate){if(duplicate.createdBy===user.uid)return duplicate;fail(409,'ALREADY_EXISTS','Cette référence existe déjà.');}}
-  const product=normalizeProductInput(body,origin,existing),key=mediaImageKey(product.image,origin);
-  if(key&&!await getDoc(env,'media/'+key.split('.')[0]))fail(400,'INVALID_IMAGE','Téléversez la photo avant d’enregistrer le produit.');
+  if(existing&&body.stock!==undefined&&Object.hasOwn(body,'expectedStock')&&(existing.stock??null)!==body.expectedStock)fail(409,'STOCK_CHANGED','Le stock a changé depuis l’ouverture de cette fiche. Actualisez le produit.');
+  const product=normalizeProductInput(body,origin,existing);for(const image of productImages(product)){const key=mediaImageKey(image,origin);if(key&&!await getDoc(env,'media/'+key.split('.')[0]))fail(400,'INVALID_IMAGE','Téléversez les photos avant d’enregistrer le produit.');}
   Object.assign(product,{id,sourceId:existing?.sourceId||Date.now(),createdAt:existing?.createdAt||now(),updatedAt:now(),updatedBy:user.uid});
   if(!existing)product.createdBy=user.uid;
-  if(existing)await setDoc(env,'products/'+id,product);else await createDoc(env,'products',id,product);
+  if(existing)await commit(env,[{update:{name:previous.raw.name,fields:fields(product)},currentDocument:{updateTime:previous.raw.updateTime}}]);else await createDoc(env,'products',id,product);
   await caches.default.delete(catalogCacheKey(request));return product;
 }
 async function uploadProductImage(request,env,user,ctx){
@@ -171,7 +181,7 @@ async function serveProductImage(request,env,key,ctx){
 async function deleteUnusedImage(request,env,user,key){
   allowRoles(user,['owner','admin','manager']);const id=key.split('.')[0],media=await getDoc(env,'media/'+id);if(!media)return {ok:true};
   if(media.uploadedBy!==user.uid&&!['owner','admin'].includes(user.role))fail(403,'ACCESS_DENIED','Cette photo appartient à un autre utilisateur.');
-  const rows=await google(env,FS+':runQuery','POST',{structuredQuery:{from:[{collectionId:'products'}],where:{fieldFilter:{field:{fieldPath:'image'},op:'EQUAL',value:{stringValue:media.image}}},limit:1}});
+  const rows=await google(env,FS+':runQuery','POST',{structuredQuery:{from:[{collectionId:'products'}],where:{compositeFilter:{op:'OR',filters:[{fieldFilter:{field:{fieldPath:'image'},op:'EQUAL',value:{stringValue:media.image}}},{fieldFilter:{field:{fieldPath:'images'},op:'ARRAY_CONTAINS',value:{stringValue:media.image}}}]}},limit:1}});
   if(rows.some(row=>row.document))fail(409,'IMAGE_IN_USE','Cette photo est utilisée par un produit.');
   await env.PRODUCT_MEDIA.delete(key);await google(env,FS+'/media/'+id,'DELETE');await caches.default.delete(new Request(new URL('/media/'+key,request.url).href));return {ok:true};
 }
