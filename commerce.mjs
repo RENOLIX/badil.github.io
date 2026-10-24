@@ -63,7 +63,7 @@ function openCheckout(){
   openModal(dialog);updateOrderSummary();
 }
 async function submit(event){
-  event.preventDefault();const form=event.currentTarget;if(!form.reportValidity())return;
+  event.preventDefault();const form=event.target;if(!form.reportValidity())return;
   const rawPhone=form.elements.phone.value.replace(/[\s().-]/g,'').replace(/^\+?213/,'0');if(!/^0[567]\d{8}$/.test(rawPhone)){form.elements.phone.setCustomValidity(t('invalidPhone'));form.elements.phone.reportValidity();return;}form.elements.phone.setCustomValidity('');
   const button=$('#order-submit'),error=$('#order-error');error.hidden=true;button.disabled=true;button.textContent=t('sending');
   state.orderKey||=crypto.randomUUID();
