@@ -43,6 +43,7 @@
   const categoryImage = (category) => `assets/categories/category-${store.categories.indexOf(category)+1}.jpg`;
   const t = (key) => text[language][key] || key;
 
+  const languagePicker=$('#menu-language-picker');
   function translatePage() {
     document.documentElement.lang = language;
     document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
@@ -50,6 +51,10 @@
     $$('[data-i18n]').forEach(el => { if (el.dataset.i18n === 'sideTitle') el.innerHTML=t(el.dataset.i18n); else el.textContent=t(el.dataset.i18n); });
     $$('[data-i18n-label]').forEach(el=>el.setAttribute('aria-label',t(el.dataset.i18nLabel)));
     $$('[data-i18n-placeholder]').forEach(el=>el.setAttribute('placeholder',t(el.dataset.i18nPlaceholder)));
+    const currentLanguage=$('#menu-current-language'),otherLanguage=$('#menu-other-language'),other=language==='ar'?'fr':'ar';
+    currentLanguage.textContent=language==='ar'?'العربية':'Français';currentLanguage.lang=language;currentLanguage.dir=language==='ar'?'rtl':'ltr';
+    otherLanguage.textContent=other==='ar'?'العربية':'Français';otherLanguage.dataset.lang=other;otherLanguage.lang=other;otherLanguage.dir=other==='ar'?'rtl':'ltr';
+    languagePicker.querySelector('summary').setAttribute('aria-label',(language==='ar'?'اللغة : ':'Langue : ')+currentLanguage.textContent);languagePicker.open=false;
     $$('[data-lang]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.lang===language)));
     $('.desktop-nav').setAttribute('aria-label',language==='ar'?'التنقل الرئيسي':'Navigation principale');
     $('.mobile-bottom-nav').setAttribute('aria-label',language==='ar'?'التنقل على الهاتف':'Navigation mobile');
@@ -117,7 +122,10 @@
     if(matchMedia('(max-width:767px)').matches) $('.site-header').classList.add('search-open');
     window.scrollTo({top:0,behavior:reducedMotion.matches?'instant':'smooth'});$('#site-search').focus({preventScroll:true});
   }
+  languagePicker.addEventListener('toggle',()=>languagePicker.querySelector('summary').setAttribute('aria-expanded',String(languagePicker.open)));
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&languagePicker.open){event.preventDefault();event.stopPropagation();languagePicker.open=false;languagePicker.querySelector('summary').focus();}});
   document.addEventListener('click',event=>{
+    if(!languagePicker.contains(event.target))languagePicker.open=false;
     const langButton=event.target.closest('[data-lang]');
     if(langButton){language=langButton.dataset.lang;try{localStorage.setItem('badil-language',language);}catch{}const url=new URL(location.href);url.searchParams.set('lang',language);history.replaceState(null,'',url);translatePage();restartHeroTimer();return;}
     const categoryLink=event.target.closest('[data-category]');
@@ -167,7 +175,7 @@
   reducedMotion.addEventListener('change',event=>{heroPaused=event.matches;categoryPaused=event.matches;updatePauseControls();restartHeroTimer();});
   $$('dialog').forEach(dialog=>{
     dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}});
-    dialog.addEventListener('close',()=>{if(dialog.id==='info-dialog')activeInfo='';restartHeroTimer();});
+    dialog.addEventListener('close',()=>{if(dialog.id==='info-dialog')activeInfo='';if(dialog.id==='category-dialog')languagePicker.open=false;restartHeroTimer();});
   });
   $('#site-search').value=searchQuery;$('#year').textContent=new Date().getFullYear();translatePage();restartHeroTimer();if(strip)requestAnimationFrame(animateCategories);
 })();

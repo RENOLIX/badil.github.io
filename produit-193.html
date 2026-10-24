@@ -16,13 +16,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=1">
+  <link rel="stylesheet" href="styles.css?v=2">
   <link rel="stylesheet" href="commerce.css?v=4">
   <link rel="stylesheet" href="latin.css?v=4">
   <link rel="stylesheet" href="pages.css?v=6">
   <script src="api-config.js?v=2" defer></script>
   <script src="store.js?v=2" defer></script>
-  <script src="app.js?v=4" defer></script>
+  <script src="app.js?v=5" defer></script>
   <script src="commerce.mjs?v=8" type="module"></script>
 </head>
 <body data-page="product" data-product-id="p-193">
@@ -101,7 +101,7 @@
     <a href="panier.html" data-page-link><svg class="icon"><use href="#i-bag"/></svg><span data-i18n="cart">السلة</span></a>
   </nav>
 
-  <dialog id="category-dialog" class="category-dialog" aria-labelledby="menu-title"><div class="dialog-heading"><h2 id="menu-title" data-i18n="allCategories">جميع الفئات</h2><button class="icon-button close-dialog" type="button" data-i18n-label="close" aria-label="إغلاق"><svg class="icon"><use href="#i-close"/></svg></button></div><div class="dialog-languages"><button type="button" data-lang="ar" lang="ar">العربية</button><button type="button" data-lang="fr" lang="fr">Français</button></div><div id="category-menu" class="category-menu"></div></dialog>
+  <dialog id="category-dialog" class="category-dialog" aria-labelledby="menu-title"><div class="dialog-heading"><h2 id="menu-title" data-i18n="allCategories">جميع الفئات</h2><button class="icon-button close-dialog" type="button" data-i18n-label="close" aria-label="إغلاق"><svg class="icon"><use href="#i-close"/></svg></button></div><div class="dialog-languages"><details id="menu-language-picker" class="mobile-language-picker"><summary aria-controls="menu-language-options" aria-expanded="false" aria-label="اللغة : العربية"><svg class="icon language-globe" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c5 5 5 13 0 18M12 3c-5 5-5 13 0 18"/></svg><span id="menu-current-language" lang="ar" dir="rtl">العربية</span><svg class="icon language-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div id="menu-language-options" class="mobile-language-options"><button type="button" id="menu-other-language" data-lang="fr" lang="fr" dir="ltr">Français</button></div></details></div><div id="category-menu" class="category-menu"></div></dialog>
   <noscript><p class="noscript-message">Veuillez activer JavaScript pour le défilement des photos et le choix de langue. يرجى تفعيل جافاسكريبت لعرض الصور واختيار اللغة.</p></noscript>
 </body>
 </html>
