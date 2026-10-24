@@ -8,6 +8,9 @@ Boutique algérienne français/arabe, publiée sur [GitHub Pages](https://renoli
 - Les cinq miels proposent obligatoirement un choix entre 125 g, 250 g, 500 g et 1 kg. Les prix connus correspondent à 500 g ; les autres formats restent à chiffrer dans l’administration.
 - Cinq diapositives toutes les quatre secondes, dont une campagne de livraison en français ou en arabe. Le carrousel peut être suspendu et respecte la réduction des animations.
 - Recherche, filtres, tri, favoris et panier. Seuls les identifiants d’articles, formats et quantités sont mémorisés localement ; les coordonnées de commande ne le sont pas.
+- Chaque produit possède son propre document HTML et son URL. Le panier, la commande, les favoris, le contact, la présentation, la confidentialité et le remerciement sont également des pages distinctes.
+- La recherche affiche des catégories associées et des résultats illustrés qui mènent aux pages produit. Les chiffres, montants, téléphones et e-mails restent en caractères latins et de gauche à droite dans les deux langues.
+- Le site public ne comporte ni icône de profil ni lien vers l’administration ; celle-ci reste accessible directement sous /admin/.
 - Commande avec paiement à la livraison, wilaya, commune et choix domicile/bureau. Le serveur recalcule les prix et enregistre la demande dans Firestore avant d’afficher sa référence.
 - Livraison gratuite à **Dellys uniquement** dès 4 000 DA d’articles aux prix connus. Les tarifs non renseignés restent « à confirmer » ; aucune livraison payante n’est présentée comme gratuite.
 
@@ -32,6 +35,7 @@ Node.js 22.18+ ou une version récente, sans dépendance pour l’interface :
 
 ```sh
 npm run dev
+npm run build
 npm run check
 npm test
 node scripts/catalog-audit.mjs
@@ -52,3 +56,5 @@ GitHub Pages publie la branche `main`, dossier `/`. Déploiement API avec Wrangl
 - Les données des 69 wilayas et 1 541 communes et leurs attributions sont documentées dans `locations-sources.md`.
 
 Contact boutique : 0550 94 97 95 / 0776 22 22 94. Crédit de réalisation : [SITEMAGIQUE](https://sitemagique.com).
+
+Après une modification de la structure commune, npm run build régénère les 80 pages produit et les sept pages de parcours. Le remerciement conserve uniquement la référence, le montant et l’état du dernier reçu dans sessionStorage ; aucune coordonnée client n’y est conservée.

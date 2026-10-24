@@ -1,0 +1,4 @@
+.latin-data,a[href^="tel:"],a[href^="mailto:"],input[type="tel"],input[type="email"],input[type="number"],.cart-count,.order-reference strong{direction:ltr!important;unicode-bidi:isolate;font-family:"Public Sans",sans-serif;font-variant-numeric:lining-nums tabular-nums}
+.latin-data{display:inline-block;white-space:nowrap}
+input[type="tel"],input[type="email"],input[type="number"]{text-align:left!important}
+a[href^="tel:"],a[href^="mailto:"]{display:inline-block;white-space:nowrap}
