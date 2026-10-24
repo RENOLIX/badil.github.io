@@ -6,7 +6,7 @@
   "scripts": {
     "build": "node scripts/build-pages.mjs",
     "dev": "node scripts/serve.mjs",
-    "check": "node --check app.js && node --check store.js && node --check commerce.mjs && node --check latin.mjs && node --check scripts/build-pages.mjs && node --check admin/admin.mjs && node --check worker/index.mjs && node --check scripts/serve.mjs && node scripts/pages-audit.mjs",
-    "test": "node --test --test-isolation=none scripts/order-rules.test.mjs"
+    "check": "node --check app.js && node --check store.js && node --check commerce.mjs && node --check latin.mjs && node --check scripts/build-pages.mjs && node --check admin/product-editor.mjs && node --check product-data.mjs && node --check worker/products.mjs && node --check admin/admin.mjs && node --check worker/index.mjs && node --check scripts/serve.mjs && node scripts/pages-audit.mjs",
+    "test": "node --test --test-isolation=none scripts/order-rules.test.mjs scripts/products.test.mjs"
   }
 }

@@ -3,6 +3,7 @@
   "main": "index.mjs",
   "compatibility_date": "2026-10-24",
   "workers_dev": true,
+  "kv_namespaces": [{"binding":"PRODUCT_MEDIA","id":"66707547b8c1485d9b936084b0c3bac5"}],
   "vars": {
     "FIREBASE_PROJECT_ID": "badeldz",
     "STORE_ORIGIN": "https://renolix.github.io"

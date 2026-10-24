@@ -34,7 +34,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_15_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_15_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Tershoub est une référence de soin capillaire présentée dans son étui vert.",
+      "ar": "تيرشوب مرجع للعناية بالشعر يُقدَّم في علبته الخضراء."
+    }
   },
   {
     "id": "p-289",
@@ -71,7 +75,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_14_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_14_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Cette huile capillaire porte le nom de l’encens, aussi appelé luban dhakar.",
+      "ar": "يحمل هذا الزيت اسم اللبان الذكر ويُعرض ضمن منتجات العناية بالشعر."
+    }
   },
   {
     "id": "p-287",
@@ -109,7 +117,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_13_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_13_white_1080.jpg",
+    "shortDescription": {
+      "fr": "La prêle, appelée aussi dhayl al-hissan, donne son nom à ce petit conditionnement d’huile.",
+      "ar": "ذيل الحصان هو الاسم النباتي الذي يحمله هذا الزيت في عبوته الصغيرة."
+    }
   },
   {
     "id": "p-285",
@@ -146,7 +158,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_12_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_12_white_1080.jpg",
+    "shortDescription": {
+      "fr": "« Huile de Serpent Originale » est la dénomination commerciale de cette référence capillaire.",
+      "ar": "« زيت الحية الأصلي » هو الاسم التجاري لهذا المرجع الخاص بالعناية بالشعر."
+    }
   },
   {
     "id": "p-283",
@@ -184,7 +200,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_11_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_11_white_1080.jpg",
+    "shortDescription": {
+      "fr": "L’huile d’Herbe Verte est une référence destinée à la routine capillaire.",
+      "ar": "زيت الحشيشة الخضراء مرجع معروض للعناية بالشعر."
+    }
   },
   {
     "id": "p-281",
@@ -221,7 +241,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_10_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_10_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Cette référence à l’ail est présentée pour le soin des cheveux.",
+      "ar": "يُعرض هذا المرجع المرتبط بالثوم للعناية بالشعر."
+    }
   },
   {
     "id": "p-279",
@@ -258,7 +282,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_09_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_09_white_1080.jpg",
+    "shortDescription": {
+      "fr": "La référence « Tresses », également appelée Al-Jadayel, figure parmi les huiles capillaires de la boutique.",
+      "ar": "مرجع الجدايل موجود ضمن مجموعة زيوت الشعر في المتجر."
+    }
   },
   {
     "id": "p-277",
@@ -295,7 +323,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_08_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_08_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Cette huile de coco est proposée en conditionnement de 250 ml.",
+      "ar": "يُعرض زيت جوز الهند هذا بحجم 250 مل."
+    }
   },
   {
     "id": "p-272",
@@ -332,7 +364,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_07_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_07_white_1080.jpg",
+    "shortDescription": {
+      "fr": "« Huile de Coco Naturelle » est la référence de coco présentée dans la collection capillaire.",
+      "ar": "« زيت جوز الهند الطبيعي » هو هذا المرجع من مجموعة العناية بالشعر."
+    }
   },
   {
     "id": "p-270",
@@ -369,7 +405,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_06_white_1080-2.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_06_white_1080-2.jpg",
+    "shortDescription": {
+      "fr": "Cette référence porte l’appellation « Huile de Coco du Sri Lanka ».",
+      "ar": "يحمل هذا المرجع تسمية « زيت جوز الهند السريلانكي »."
+    }
   },
   {
     "id": "p-268",
@@ -406,7 +446,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_05_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_05_white_1080.jpg",
+    "shortDescription": {
+      "fr": "L’huile de Bousaada est une référence de la collection capillaire identifiée par son nom commercial.",
+      "ar": "زيت بوسعد مرجع ضمن مجموعة العناية بالشعر، ويُعرف باسمه التجاري."
+    }
   },
   {
     "id": "p-266",
@@ -443,7 +487,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_04_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_04_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Ce petit conditionnement d’huile d’argan permet de choisir la référence dans un format différent de l’autre huile d’argan du catalogue.",
+      "ar": "تتيح هذه العبوة الصغيرة اختيار مرجع زيت الأرغان بحجم مختلف عن منتج الأرغان الآخر في المتجر."
+    }
   },
   {
     "id": "p-264",
@@ -480,7 +528,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_03_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_03_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Cette huile d’argan est présentée dans la gamme capillaire, séparément de la petite référence.",
+      "ar": "يُعرض زيت الأرغان هذا ضمن منتجات الشعر، بشكل منفصل عن المرجع الصغير."
+    }
   },
   {
     "id": "p-262",
@@ -517,7 +569,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_02_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_02_white_1080.jpg",
+    "shortDescription": {
+      "fr": "L’huile Qonfoth, aussi repérable sous le nom Al-Qonfodh, fait partie des références capillaires proposées par la boutique.",
+      "ar": "زيت القنفذ من المراجع المتوفرة ضمن مجموعة العناية بالشعر في المتجر."
+    }
   },
   {
     "id": "p-260",
@@ -554,7 +610,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_01_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/tershop_01_white_1080.jpg",
+    "shortDescription": {
+      "fr": "L’huile Rêves Sauvages 5 Étoiles est un soin capillaire reconnaissable à son nom et à son étui illustré.",
+      "ar": "زيت الأحلام البري خمس نجوم منتج للشعر يسهل تمييزه باسمه وعلبته المصوّرة."
+    }
   },
   {
     "id": "p-256",
@@ -606,7 +666,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/kailtoos_05_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/kailtoos_05_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Le miel de printemps multi-fleurs réunit l’univers des floraisons de saison dans une référence à découvrir à table.",
+      "ar": "عسل الربيع متعدد الأزهار مرجع يرتبط بتنوّع أزهار الموسم، ويجد مكانه على مائدة الإفطار وفي الوصفات اليومية."
+    }
   },
   {
     "id": "p-254",
@@ -658,7 +722,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/kailtoos_04_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/kailtoos_04_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Le miel de sidr porte le nom du jujubier et constitue une référence bien distincte du miel multi-fleurs.",
+      "ar": "يحمل عسل السدر اسم شجرة السدر، ويشكّل مرجعاً مختلفاً عن العسل متعدد الأزهار."
+    }
   },
   {
     "id": "p-252",
@@ -710,7 +778,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/kailtoos_03_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/kailtoos_03_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Ce miel porte l’appellation eucalyptus, appelé aussi kalitous.",
+      "ar": "يحمل هذا العسل اسم الكاليتوس أو الأوكالبتوس."
+    }
   },
   {
     "id": "p-250",
@@ -762,7 +834,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/kailtoos_02_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/kailtoos_02_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Le miel de montagne est une référence au nom évocateur, à apprécier pour sa place dans la diversité des miels.",
+      "ar": "العسل الجبلي مرجع معروف باسمه، ويضيف خياراً إلى تنوّع العسل المتاح للتذوّق."
+    }
   },
   {
     "id": "p-248",
@@ -814,7 +890,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/kailtoos_01_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/kailtoos_01_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Le miel de nigelle, présenté aussi sous le nom de miel de habba sawda, complète notre sélection de cinq miels.",
+      "ar": "عسل الحبة السوداء، المعروف أيضاً بعسل حبة البركة، يكمّل مجموعتنا المكوّنة من خمسة مراجع للعسل."
+    }
   },
   {
     "id": "p-245",
@@ -851,7 +931,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_10_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_10_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Thé Vert Premium est une référence de thé vert à garder pour une pause simple, servie seule ou avec les accompagnements de votre choix.",
+      "ar": "الشاي الأخضر الراقي مرجع للشاي الأخضر يمكن اختياره لاستراحة بسيطة، وحده أو مع ما تفضّله من مرافقات."
+    }
   },
   {
     "id": "p-243",
@@ -888,7 +972,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_13_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_13_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Thé Vert Chinois Special Gunpowder est une dénomination de thé vert traditionnellement associée à des feuilles roulées en petites billes, qui se déploient pendant l’infusion.",
+      "ar": "الشاي الأخضر الصيني سبيشال غانباودر تسمية للشاي الأخضر ترتبط تقليدياً بأوراق ملفوفة على شكل حبيبات صغيرة، تتفتّح تدريجياً أثناء النقع."
+    }
   },
   {
     "id": "p-241",
@@ -925,7 +1013,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_12_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_12_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Thé Vert Al-Sahm est une référence de thé vert identifiée par le nom Al-Sahm, à retrouver facilement lorsque vous renouvelez votre sélection de thés.",
+      "ar": "الشاي الأخضر السهم مرجع للشاي الأخضر يحمل اسم السهم، ويسهل التعرّف إليه عند تجديد اختيارك من أنواع الشاي."
+    }
   },
   {
     "id": "p-239",
@@ -962,7 +1054,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_11_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_11_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Thé Vert Navire du Désert est une référence de thé vert portant un nom distinctif, adaptée au choix d’une boîte pour les moments de partage autour du thé.",
+      "ar": "الشاي الأخضر سفينة الصحراء مرجع للشاي الأخضر يحمل اسماً مميزاً، ويمكن اختياره للحظات مشاركة الشاي على المائدة."
+    }
   },
   {
     "id": "p-237",
@@ -999,7 +1095,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_08_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_08_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Thé Vert des Prairies est une référence de thé vert que son nom Barari permet de distinguer des autres boîtes proposées dans notre sélection.",
+      "ar": "الشاي الأخضر براري مرجع للشاي الأخضر يسهّل اسم براري تمييزه عن عبوات الشاي الأخرى المعروضة في مجموعتنا."
+    }
   },
   {
     "id": "p-235",
@@ -1036,7 +1136,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_04_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_04_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Thé Vert Adana est une référence de thé vert au nom facile à repérer, pour retrouver la boîte choisie parmi les différents thés du catalogue.",
+      "ar": "الشاي الأخضر أدانا مرجع للشاي الأخضر باسم واضح، ليسهّل العثور على العبوة المطلوبة بين أصناف الشاي المختلفة في المتجر."
+    }
   },
   {
     "id": "p-233",
@@ -1073,7 +1177,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_03_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_03_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Cette référence de nigelle porte le nom « Médine ».",
+      "ar": "يحمل هذا المرجع من زيت الحبة السوداء اسم « المدينة المنورة »."
+    }
   },
   {
     "id": "p-231",
@@ -1110,7 +1218,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_09_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_09_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Cette huile de nigelle se distingue par la mention « non torréfiée ».",
+      "ar": "يتميّز زيت الحبة السوداء هذا بعبارة « غير محمّص »."
+    }
   },
   {
     "id": "p-229",
@@ -1147,7 +1259,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_07_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_07_white_1080.jpg",
+    "shortDescription": {
+      "fr": "L’huile de nigelle Al-Baraka est ici proposée en 30 ml.",
+      "ar": "يُعرض زيت الحبة السوداء البركة هنا بحجم 30 مل."
+    }
   },
   {
     "id": "p-227",
@@ -1184,7 +1300,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_06_white_1080-1.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_06_white_1080-1.jpg",
+    "shortDescription": {
+      "fr": "Cette référence Al-Baraka contient 60 ml selon sa dénomination.",
+      "ar": "يحمل هذا المرجع من البركة حجم 60 مل بحسب تسميته."
+    }
   },
   {
     "id": "p-225",
@@ -1221,7 +1341,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_05_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_05_white_1080.jpg",
+    "shortDescription": {
+      "fr": "« Huile de Nigelle Originale » est la dénomination de cette référence de graines noires.",
+      "ar": "« زيت الحبة السوداء الأصلي » هو اسم هذا المرجع من زيوت حبة البركة."
+    }
   },
   {
     "id": "p-223",
@@ -1259,7 +1383,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_02_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_02_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Ce conditionnement d’huile de graine Barakah est identifié en 250 ml.",
+      "ar": "تتميّز عبوة زيت حبة البركة هذه بحجم 250 مل."
+    }
   },
   {
     "id": "p-221",
@@ -1297,7 +1425,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_01_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/7abet_soda_01_white_1080.jpg",
+    "shortDescription": {
+      "fr": "L’huile de graine Barakah est proposée ici en 25 ml, dans un petit conditionnement facile à identifier.",
+      "ar": "يُعرض زيت حبة البركة هنا بحجم 25 مل في عبوة صغيرة يسهل التعرّف إليها."
+    }
   },
   {
     "id": "p-219",
@@ -1334,7 +1466,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/msk_08_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/msk_08_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile de Musc Yéménite – Citrouille.",
+      "ar": "زيت مسك اليمان يقطين."
+    }
   },
   {
     "id": "p-217",
@@ -1371,7 +1507,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/msk_07_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/msk_07_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile de Musc Yéménite – Rose.",
+      "ar": "زيت مسك اليمان ورد."
+    }
   },
   {
     "id": "p-215",
@@ -1408,7 +1548,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/msk_06_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/msk_06_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile de Musc Yéménite – Souchet.",
+      "ar": "زيت مسك اليمان نبات السعد."
+    }
   },
   {
     "id": "p-213",
@@ -1445,7 +1589,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/msk_05_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/msk_05_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile de Musc Yéménite – Moutarde.",
+      "ar": "زيت مسك اليمان خردل."
+    }
   },
   {
     "id": "p-211",
@@ -1482,7 +1630,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/msk_04_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/msk_04_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile de Musc Yéménite – Lavande.",
+      "ar": "زيت مسك اليمان خزامى."
+    }
   },
   {
     "id": "p-209",
@@ -1519,7 +1671,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/msk_03_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/msk_03_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile de Musc Yéménite – Jojoba.",
+      "ar": "زيت مسك اليمان جوجوبا."
+    }
   },
   {
     "id": "p-207",
@@ -1556,7 +1712,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/msk_02_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/msk_02_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile de Musc Yéménite – Asafœtida.",
+      "ar": "زيت مسك اليمان حلتيت."
+    }
   },
   {
     "id": "p-205",
@@ -1593,7 +1753,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/msk_01_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/msk_01_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile de Musc Yéménite – Citron.",
+      "ar": "زيت مسك اليمان ليمون."
+    }
   },
   {
     "id": "p-203",
@@ -1630,7 +1794,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_15_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_15_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Al-Wafia – Gingembre.",
+      "ar": "زيت الوافية زنجبيل."
+    }
   },
   {
     "id": "p-201",
@@ -1667,7 +1835,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_14_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_14_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Al-Wafia – Soja.",
+      "ar": "زيت الوافية صويا."
+    }
   },
   {
     "id": "p-199",
@@ -1704,7 +1876,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_13_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_13_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Al-Wafia – Sésame.",
+      "ar": "زيت الوافية سمسم."
+    }
   },
   {
     "id": "p-197",
@@ -1741,7 +1917,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_12_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_12_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Al-Wafia – Sidr.",
+      "ar": "زيت الوافية سدر."
+    }
   },
   {
     "id": "p-195",
@@ -1778,7 +1958,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_11_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_11_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Al-Wafia – Menthe.",
+      "ar": "زيت الوافية نعناع."
+    }
   },
   {
     "id": "p-193",
@@ -1815,7 +1999,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_09_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_09_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Al-Wafia – Ricin.",
+      "ar": "زيت الوافية خروع."
+    }
   },
   {
     "id": "p-191",
@@ -1852,7 +2040,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_08_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_08_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Al-Wafia – Lavande.",
+      "ar": "زيت الوافية خزامى."
+    }
   },
   {
     "id": "p-189",
@@ -1889,7 +2081,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_07_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_07_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Al-Wafia – Romarin.",
+      "ar": "زيت الوافية اكليل الجبل."
+    }
   },
   {
     "id": "p-187",
@@ -1926,7 +2122,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_06_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_06_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Al-Wafia – Harmel.",
+      "ar": "زيت الوافية حرمل."
+    }
   },
   {
     "id": "p-185",
@@ -1963,7 +2163,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_04_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_04_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Al-Wafia – Fijel.",
+      "ar": "زيت الوافية فيجل."
+    }
   },
   {
     "id": "p-183",
@@ -2000,7 +2204,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_05_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_05_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Al-Wafia – Basilic.",
+      "ar": "زيت الوافية ريحان."
+    }
   },
   {
     "id": "p-181",
@@ -2037,7 +2245,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_03_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_03_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Al-Wafia – Qatrane.",
+      "ar": "زيت الوافية قطران."
+    }
   },
   {
     "id": "p-179",
@@ -2074,7 +2286,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_02_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_02_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Al-Wafia – Costus Indien.",
+      "ar": "زيت الوافية قسط هندي."
+    }
   },
   {
     "id": "p-177",
@@ -2111,7 +2327,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_01_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/soya_01_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Al-Wafia – Courge au Miel.",
+      "ar": "زيت الوافية قرع العسل."
+    }
   },
   {
     "id": "p-175",
@@ -2148,7 +2368,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_25_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_25_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Gingembre.",
+      "ar": "زيت الكابتن زنجبيل."
+    }
   },
   {
     "id": "p-173",
@@ -2185,7 +2409,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_24_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_24_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Thym.",
+      "ar": "زيت الكابتن زعتر."
+    }
   },
   {
     "id": "p-170",
@@ -2222,7 +2450,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_12_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_12_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Ail.",
+      "ar": "زيت الكابتن ثوم."
+    }
   },
   {
     "id": "p-168",
@@ -2259,7 +2491,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_23_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_23_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Figue de Barbarie.",
+      "ar": "زيت الكابتن تين شوكي."
+    }
   },
   {
     "id": "p-166",
@@ -2296,7 +2532,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_22_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_22_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Arbre à Thé.",
+      "ar": "زيت الكابتن شجرة الشاي."
+    }
   },
   {
     "id": "p-164",
@@ -2333,7 +2573,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_21_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_21_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Sésame.",
+      "ar": "زيت الكابتن سمسم."
+    }
   },
   {
     "id": "p-162",
@@ -2370,7 +2614,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_11_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_11_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Sidr.",
+      "ar": "زيت الكابتن سدر."
+    }
   },
   {
     "id": "p-160",
@@ -2407,7 +2655,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_20_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_20_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Rue.",
+      "ar": "زيت الكابتن سذاب."
+    }
   },
   {
     "id": "p-158",
@@ -2444,7 +2696,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_19_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_19_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Basilic.",
+      "ar": "زيت الكابتن ريحان."
+    }
   },
   {
     "id": "p-156",
@@ -2481,7 +2737,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_10_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_10_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Orange.",
+      "ar": "زيت الكابتن برتقال."
+    }
   },
   {
     "id": "p-154",
@@ -2518,7 +2778,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_09_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_09_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Moutarde.",
+      "ar": "زيت الكابتن خردل."
+    }
   },
   {
     "id": "p-145",
@@ -2555,7 +2819,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_18_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_18_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Menthe.",
+      "ar": "زيت الكابتن نعناع."
+    }
   },
   {
     "id": "p-143",
@@ -2592,7 +2860,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_08_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_08_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Amande Douce.",
+      "ar": "زيت الكابتن لوز حلو."
+    }
   },
   {
     "id": "p-141",
@@ -2629,7 +2901,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_17_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_17_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Citron.",
+      "ar": "زيت الكابتن ليمون."
+    }
   },
   {
     "id": "p-139",
@@ -2666,7 +2942,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_07_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_07_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Lavande.",
+      "ar": "زيت الكابتن خزامى."
+    }
   },
   {
     "id": "p-137",
@@ -2703,7 +2983,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_06_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_06_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Ricin.",
+      "ar": "زيت الكابتن خروع."
+    }
   },
   {
     "id": "p-135",
@@ -2740,7 +3024,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_16_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_16_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Camphre.",
+      "ar": "زيت الكابتن كافور."
+    }
   },
   {
     "id": "p-133",
@@ -2777,7 +3065,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_15_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_15_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Germe de Blé.",
+      "ar": "زيت الكابتن جنين القمح."
+    }
   },
   {
     "id": "p-131",
@@ -2814,7 +3106,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_13_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_13_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Amande Amère.",
+      "ar": "زيت الكابتن لوز مر."
+    }
   },
   {
     "id": "p-129",
@@ -2851,7 +3147,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_05_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_05_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Romarin.",
+      "ar": "زيت الكابتن اكليل."
+    }
   },
   {
     "id": "p-127",
@@ -2888,7 +3188,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_04_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_04_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Courge au Miel.",
+      "ar": "زيت الكابتن قرع العسل."
+    }
   },
   {
     "id": "p-124",
@@ -2925,7 +3229,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_03_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_03_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Fenugrec.",
+      "ar": "زيت الكابتن حلبة."
+    }
   },
   {
     "id": "p-122",
@@ -2962,7 +3270,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_02_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_02_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Graines de Cresson.",
+      "ar": "زيت الكابتن حب الرشاد."
+    }
   },
   {
     "id": "p-120",
@@ -2999,7 +3311,11 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_01_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_01_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Roquette.",
+      "ar": "زيت الكابتن جرجير."
+    }
   },
   {
     "id": "p-117",
@@ -3036,6 +3352,10 @@
       }
     ],
     "available": true,
-    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_14_white_1080.jpg"
+    "sourceImage": "https://yellow-lapwing-642722.hostingersite.com/wp-content/uploads/2026/09/bitter_almond_14_white_1080.jpg",
+    "shortDescription": {
+      "fr": "Huile Captain – Noix de Coco.",
+      "ar": "زيت الكابتن جوز الهند."
+    }
   }
 ]

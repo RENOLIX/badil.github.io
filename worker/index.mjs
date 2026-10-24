@@ -1,4 +1,6 @@
 import locations from '../locations.json' with {type:'json'};
+import {normalizeProductInput,validateImageBytes,MAX_IMAGE_BYTES} from './products.mjs';
+import {mediaImageKey} from '../product-data.mjs';
 
 const PROJECT='badeldz';
 const FS=`https://firestore.googleapis.com/v1/projects/${PROJECT}/databases/(default)/documents`;
@@ -130,13 +132,48 @@ async function updateOrder(request,env,id,user){
   if(body.status){if(['confirmed','preparing','shipped','delivered'].includes(body.status)&&order.total===null)fail(400,'MISSING_PRICE','Renseignez tous les prix avant de confirmer la commande.');order.status=body.status;}
   await setDoc(env,`orders/${id}`,order);return order;
 }
-async function updateProduct(request,env,id,user){
-  allowRoles(user,['owner','admin','manager']);const product=await getDoc(env,`products/${id}`);if(!product)fail(404,'NOT_FOUND','Produit introuvable.');const body=await readBody(request);
-  if(body.name){product.name={fr:clean(body.name.fr,'nom français',2,180),ar:clean(body.name.ar,'nom arabe',2,180)};}
-  if(body.description){for(const lang of['fr','ar']){if(!Array.isArray(body.description[lang])||body.description[lang].length<1||body.description[lang].length>8)fail(400,'INVALID_DESCRIPTION','Description invalide.');}product.description={fr:body.description.fr.map(p=>clean(p,'description',1,4000)),ar:body.description.ar.map(p=>clean(p,'description',1,4000))};}
-  if(body.variantPrices){for(const variant of product.variants){if(Object.hasOwn(body.variantPrices,variant.id)){const price=body.variantPrices[variant.id];if(!validPrice(price))fail(400,'INVALID_PRICE','Le prix doit être un montant positif en DA ou rester vide.');variant.price=price;}}product.price=(product.variants.find(v=>v.id==='500g')||product.variants[0]).price;}
-  if(body.available!==undefined){if(typeof body.available!=='boolean')fail(400,'INVALID_FIELD','Disponibilité invalide.');product.available=body.available;}
-  product.updatedAt=now();await setDoc(env,`products/${id}`,product);return product;
+async function saveProduct(request,env,user,id=null){
+  allowRoles(user,['owner','admin','manager']);
+  const body=await readBody(request),origin=new URL(request.url).origin;
+  let existing=null;
+  if(id){existing=await getDoc(env,'products/'+id);if(!existing)fail(404,'NOT_FOUND','Produit introuvable.');}
+  else{id=body.id||('p-'+Date.now()+String(crypto.getRandomValues(new Uint32Array(1))[0]%1000000).padStart(6,'0'));if(!/^p-\d{16,24}$/.test(id))fail(400,'INVALID_PRODUCT_ID','Identifiant du produit invalide.');const duplicate=await getDoc(env,'products/'+id);if(duplicate){if(duplicate.createdBy===user.uid)return duplicate;fail(409,'ALREADY_EXISTS','Cette référence existe déjà.');}}
+  const product=normalizeProductInput(body,origin,existing),key=mediaImageKey(product.image,origin);
+  if(key&&!await getDoc(env,'media/'+key.split('.')[0]))fail(400,'INVALID_IMAGE','Téléversez la photo avant d’enregistrer le produit.');
+  Object.assign(product,{id,sourceId:existing?.sourceId||Date.now(),createdAt:existing?.createdAt||now(),updatedAt:now(),updatedBy:user.uid});
+  if(!existing)product.createdBy=user.uid;
+  if(existing)await setDoc(env,'products/'+id,product);else await createDoc(env,'products',id,product);
+  await caches.default.delete(catalogCacheKey(request));return product;
+}
+async function uploadProductImage(request,env,user,ctx){
+  allowRoles(user,['owner','admin','manager']);if(!env.PRODUCT_MEDIA)fail(503,'STORAGE_UNAVAILABLE','Le stockage des photos est indisponible.');
+  const type=(request.headers.get('Content-Type')||'').split(';')[0];
+  if(!['image/jpeg','image/png','image/webp'].includes(type))fail(400,'INVALID_IMAGE','Utilisez une photo JPG, PNG ou WebP.');
+  if(Number(request.headers.get('Content-Length'))>MAX_IMAGE_BYTES)fail(413,'IMAGE_TOO_LARGE','L’image optimisée dépasse 1,5 Mo.');
+  if(!request.body)fail(400,'INVALID_IMAGE','Photo manquante.');
+  const reader=request.body.getReader(),chunks=[];let size=0;
+  while(true){const chunk=await reader.read();if(chunk.done)break;size+=chunk.value.length;if(size>MAX_IMAGE_BYTES){await reader.cancel();fail(413,'IMAGE_TOO_LARGE','L’image optimisée dépasse 1,5 Mo.');}chunks.push(chunk.value);}
+  const bytes=new Uint8Array(size);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length;}
+  const extension=validateImageBytes(bytes,type),id=crypto.randomUUID(),key=id+'.'+extension,image=new URL('/media/'+key,request.url).href;
+  await env.PRODUCT_MEDIA.put(key,bytes,{metadata:{contentType:type}});
+  try{await createDoc(env,'media',id,{id,key,image,contentType:type,size,createdAt:now(),uploadedBy:user.uid});}catch(error){await env.PRODUCT_MEDIA.delete(key);throw error;}
+  const response=new Response(bytes,{headers:mediaHeaders(extension)});ctx.waitUntil(caches.default.put(new Request(image),response));
+  return {image,key,size,contentType:type};
+}
+const mediaHeaders=extension=>({'Content-Type':{png:'image/png',jpg:'image/jpeg',webp:'image/webp'}[extension],'Cache-Control':'public,max-age=31536000,immutable','X-Content-Type-Options':'nosniff'});
+async function serveProductImage(request,env,key,ctx){
+  if(!env.PRODUCT_MEDIA)fail(503,'STORAGE_UNAVAILABLE','Stockage indisponible.');
+  const cacheKey=new Request(new URL('/media/'+key,request.url).href),cached=await caches.default.match(cacheKey);
+  if(cached)return request.method==='HEAD'?new Response(null,{headers:cached.headers}):cached;
+  const bytes=await env.PRODUCT_MEDIA.get(key,{type:'arrayBuffer'});if(!bytes)fail(404,'NOT_FOUND','Photo introuvable.');
+  const response=new Response(bytes,{headers:mediaHeaders(key.split('.').at(-1))});ctx.waitUntil(caches.default.put(cacheKey,response.clone()));return request.method==='HEAD'?new Response(null,{headers:response.headers}):response;
+}
+async function deleteUnusedImage(request,env,user,key){
+  allowRoles(user,['owner','admin','manager']);const id=key.split('.')[0],media=await getDoc(env,'media/'+id);if(!media)return {ok:true};
+  if(media.uploadedBy!==user.uid&&!['owner','admin'].includes(user.role))fail(403,'ACCESS_DENIED','Cette photo appartient à un autre utilisateur.');
+  const rows=await google(env,FS+':runQuery','POST',{structuredQuery:{from:[{collectionId:'products'}],where:{fieldFilter:{field:{fieldPath:'image'},op:'EQUAL',value:{stringValue:media.image}}},limit:1}});
+  if(rows.some(row=>row.document))fail(409,'IMAGE_IN_USE','Cette photo est utilisée par un produit.');
+  await env.PRODUCT_MEDIA.delete(key);await google(env,FS+'/media/'+id,'DELETE');await caches.default.delete(new Request(new URL('/media/'+key,request.url).href));return {ok:true};
 }
 async function manageUsers(request,env,user,id){
   allowRoles(user,['owner','admin']);
@@ -161,7 +198,9 @@ async function manageUsers(request,env,user,id){
 const catalogCacheKey=request=>new Request(new URL('/api/cache/catalog',request.url).href);
 async function route(request,env,ctx){
   const url=new URL(request.url),path=url.pathname;
+  const mediaKey=path.match(/^\/media\/([a-f0-9-]{36}\.(?:webp|png|jpg))$/i)?.[1];if(mediaKey&&['GET','HEAD'].includes(request.method))return serveProductImage(request,env,mediaKey,ctx);
   if(path==='/api/health')return {ok:true,project:PROJECT,database:'Firestore'};
+  const publicProductId=path.match(/^\/api\/products\/(p-\d{1,64})$/)?.[1];if(publicProductId&&request.method==='GET'){const product=await getDoc(env,'products/'+publicProductId);if(!product)fail(404,'NOT_FOUND','Produit introuvable.');return {product};}
   if(path==='/api/catalog'&&request.method==='GET'){
     const key=catalogCacheKey(request);const fresh=url.searchParams.get('fresh')==='1';const cached=!fresh&&await caches.default.match(key);if(cached)return cached.json();
     const [products,deliveryRates]=await Promise.all([listDocs(env,'products'),listDocs(env,'deliveryRates')]);const result={products,deliveryRates,freeDelivery:{wilaya:'35',commune:'3528',threshold:4000}};
@@ -170,13 +209,16 @@ async function route(request,env,ctx){
   if(path==='/api/orders'&&request.method==='POST')return submitOrder(request,env);
   if(!path.startsWith('/api/admin/'))fail(404,'NOT_FOUND','Page introuvable.');
   const user=await authenticate(request,env);
+  if(path==='/api/admin/uploads'&&request.method==='POST')return uploadProductImage(request,env,user,ctx);
+  const unusedImage=path.match(/^\/api\/admin\/uploads\/([a-f0-9-]{36}\.(?:webp|png|jpg))$/i)?.[1];if(unusedImage&&request.method==='DELETE')return deleteUnusedImage(request,env,user,unusedImage);
   if(path==='/api/admin/me')return {user};
   if(path==='/api/admin/orders'&&request.method==='GET'){
     const rows=await google(env,`${FS}:runQuery`,'POST',{structuredQuery:{from:[{collectionId:'orders'}],orderBy:[{field:{fieldPath:'createdAt'},direction:'DESCENDING'}],limit:500}});return {orders:(rows||[]).filter(r=>r.document).map(r=>documentData(r.document))};
   }
   const orderId=path.match(/^\/api\/admin\/orders\/([a-f0-9-]{36})$/i)?.[1];if(orderId&&request.method==='PATCH')return updateOrder(request,env,orderId,user);
   if(path==='/api/admin/products'&&request.method==='GET'){allowRoles(user,['owner','admin','manager']);return {products:await listDocs(env,'products')};}
-  const productId=path.match(/^\/api\/admin\/products\/(p-\d+)$/)?.[1];if(productId&&request.method==='PATCH'){const result=await updateProduct(request,env,productId,user);await caches.default.delete(catalogCacheKey(request));return result;}
+  if(path==='/api/admin/products'&&request.method==='POST')return saveProduct(request,env,user);
+  const productId=path.match(/^\/api\/admin\/products\/(p-\d+)$/)?.[1];if(productId&&request.method==='PATCH')return saveProduct(request,env,user,productId);
   if(path==='/api/admin/delivery'){
     allowRoles(user,['owner','admin','manager']);if(request.method==='GET')return {rates:await listDocs(env,'deliveryRates')};
     if(request.method==='PUT'){const {rates}=await readBody(request);if(!Array.isArray(rates)||rates.length!==69||new Set(rates.map(r=>r.code)).size!==69)fail(400,'INVALID_RATES','Les 69 wilayas doivent être renseignées une seule fois.');const writes=rates.map(rate=>{const wilaya=locations.find(w=>w.code===rate.code);if(!wilaya||!validPrice(rate.home)||!validPrice(rate.desk)||typeof rate.enabled!=='boolean')fail(400,'INVALID_RATES','Tarif ou wilaya invalide.');return{update:{name:`${ROOT}/deliveryRates/${rate.code}`,fields:fields({code:rate.code,name:wilaya.name,home:rate.home,desk:rate.desk,enabled:rate.enabled,updatedAt:now()})}};});await commit(env,writes);await caches.default.delete(catalogCacheKey(request));return {ok:true};}
@@ -190,7 +232,7 @@ export default{async fetch(request,env,ctx){
   const cors=origin&&allowed.includes(origin)?{'Access-Control-Allow-Origin':origin,'Vary':'Origin'}:{};
   const headers={...cors,'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff','X-Robots-Tag':'noindex','Referrer-Policy':'no-referrer'};
   if(origin&&!allowed.includes(origin))return new Response(JSON.stringify({error:{code:'ORIGIN_DENIED',message:'Origine non autorisée.'}}),{status:403,headers});
-  if(request.method==='OPTIONS')return new Response(null,{status:204,headers:{...headers,'Access-Control-Allow-Methods':'GET,POST,PATCH,PUT,OPTIONS','Access-Control-Allow-Headers':'Content-Type,Authorization','Access-Control-Max-Age':'600'}});
-  try{return new Response(JSON.stringify(await route(request,env,ctx)),{status:200,headers});}
+  if(request.method==='OPTIONS')return new Response(null,{status:204,headers:{...headers,'Access-Control-Allow-Methods':'GET,HEAD,POST,PATCH,PUT,DELETE,OPTIONS','Access-Control-Allow-Headers':'Content-Type,Authorization','Access-Control-Max-Age':'600'}});
+  try{const result=await route(request,env,ctx);if(result instanceof Response){const response=new Response(result.body,{status:result.status,headers:new Headers(result.headers)});for(const [key,value] of Object.entries(cors))response.headers.set(key,value);return response;}return new Response(JSON.stringify(result),{status:200,headers});}
   catch(error){const status=error.status||500;return new Response(JSON.stringify({error:{code:error.code||'INTERNAL_ERROR',message:error.status?error.message:'Une erreur est survenue. Réessayez dans un instant.',...(error.details?{details:error.details}:{})}}),{status,headers});}
 }};

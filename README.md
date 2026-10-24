@@ -57,4 +57,8 @@ GitHub Pages publie la branche `main`, dossier `/`. Déploiement API avec Wrangl
 
 Contact boutique : 0550 94 97 95 / 0776 22 22 94. Crédit de réalisation : [SITEMAGIQUE](https://sitemagique.com).
 
-Après une modification de la structure commune, npm run build régénère les 80 pages produit et les sept pages de parcours. Le remerciement conserve uniquement la référence, le montant et l’état du dernier reçu dans sessionStorage ; aucune coordonnée client n’y est conservée.
+Après une modification de la structure commune, npm run build régénère les 80 pages produit et les huit autres pages. Les produits ajoutés depuis l’administration disposent immédiatement de leur page `produit.html?id=…`, sans nouveau déploiement GitHub. Le remerciement conserve uniquement la référence, le montant et l’état du dernier reçu dans sessionStorage ; aucune coordonnée client n’y est conservée.
+
+L’administration permet d’ajouter un produit et de modifier sa photo ainsi que ses descriptions courtes et détaillées en français et en arabe. Les descriptions courtes apparaissent entre le titre et le prix. Une première phrase de la description détaillée sert de résumé pour les anciennes fiches sans résumé enregistré.
+
+Les photos sont sélectionnées depuis le PC ou la galerie du téléphone, prévisualisées et optimisées en WebP (1 600 px maximum, 1,5 Mo maximum après optimisation). Les données des produits et les métadonnées restent dans Firestore `badeldz` ; les fichiers publics sont conservés dans la liaison Cloudflare KV `PRODUCT_MEDIA`. Aucun changement du forfait Firebase n’est requis. Les routes de téléversement exigent un compte propriétaire, administrateur ou gestionnaire ; le serveur contrôle le format et la taille des fichiers. Une photo référencée par un produit ne peut pas être supprimée par la route de nettoyage.
