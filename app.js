@@ -46,6 +46,10 @@
   const t = (key) => text[language][key] || key;
 
   const languagePicker=$('#menu-language-picker');
+  const languagePickers=[
+    {picker:languagePicker,current:$('#menu-current-language'),otherButton:$('#menu-other-language')},
+    {picker:$('#header-language-picker'),current:$('#header-current-language'),otherButton:$('#header-other-language')}
+  ];
   function translatePage() {
     document.documentElement.lang = language;
     document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
@@ -53,10 +57,12 @@
     $$('[data-i18n]').forEach(el => { if (el.dataset.i18n === 'sideTitle') el.innerHTML=t(el.dataset.i18n); else el.textContent=t(el.dataset.i18n); });
     $$('[data-i18n-label]').forEach(el=>el.setAttribute('aria-label',t(el.dataset.i18nLabel)));
     $$('[data-i18n-placeholder]').forEach(el=>el.setAttribute('placeholder',t(el.dataset.i18nPlaceholder)));
-    const currentLanguage=$('#menu-current-language'),otherLanguage=$('#menu-other-language'),other=language==='ar'?'fr':'ar';
-    currentLanguage.textContent=language==='ar'?'العربية':'Français';currentLanguage.lang=language;currentLanguage.dir=language==='ar'?'rtl':'ltr';
-    otherLanguage.textContent=other==='ar'?'العربية':'Français';otherLanguage.dataset.lang=other;otherLanguage.lang=other;otherLanguage.dir=other==='ar'?'rtl':'ltr';
-    languagePicker.querySelector('summary').setAttribute('aria-label',(language==='ar'?'اللغة : ':'Langue : ')+currentLanguage.textContent);languagePicker.open=false;
+    const other=language==='ar'?'fr':'ar';
+    for(const {picker,current,otherButton} of languagePickers){
+      current.textContent=language==='ar'?'العربية':'Français';current.lang=language;current.dir=language==='ar'?'rtl':'ltr';
+      otherButton.textContent=other==='ar'?'العربية':'Français';otherButton.dataset.lang=other;otherButton.lang=other;otherButton.dir=other==='ar'?'rtl':'ltr';
+      picker.querySelector('summary').setAttribute('aria-label',(language==='ar'?'اللغة : ':'Langue : ')+current.textContent);picker.open=false;
+    }
     $$('[data-lang]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.lang===language)));
     $('.desktop-nav').setAttribute('aria-label',language==='ar'?'التنقل الرئيسي':'Navigation principale');
     $('.mobile-bottom-nav').setAttribute('aria-label',language==='ar'?'التنقل على الهاتف':'Navigation mobile');
@@ -124,10 +130,13 @@
     if(matchMedia('(max-width:767px)').matches) $('.site-header').classList.add('search-open');
     window.scrollTo({top:0,behavior:reducedMotion.matches?'instant':'smooth'});$('#site-search').focus({preventScroll:true});
   }
-  languagePicker.addEventListener('toggle',()=>languagePicker.querySelector('summary').setAttribute('aria-expanded',String(languagePicker.open)));
-  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&languagePicker.open){event.preventDefault();event.stopPropagation();languagePicker.open=false;languagePicker.querySelector('summary').focus();}});
+  for(const {picker} of languagePickers)picker.addEventListener('toggle',()=>{
+    picker.querySelector('summary').setAttribute('aria-expanded',String(picker.open));
+    if(picker.open)for(const {picker:otherPicker} of languagePickers)if(otherPicker!==picker)otherPicker.open=false;
+  });
+  document.addEventListener('keydown',event=>{const openPicker=languagePickers.find(({picker})=>picker.open)?.picker;if(event.key==='Escape'&&openPicker){event.preventDefault();event.stopPropagation();openPicker.open=false;openPicker.querySelector('summary').focus();}});
   document.addEventListener('click',event=>{
-    if(!languagePicker.contains(event.target))languagePicker.open=false;
+    for(const {picker} of languagePickers)if(!picker.contains(event.target))picker.open=false;
     const langButton=event.target.closest('[data-lang]');
     if(langButton){language=langButton.dataset.lang;try{localStorage.setItem('badil-language',language);}catch{}const url=new URL(location.href);url.searchParams.set('lang',language);history.replaceState(null,'',url);translatePage();restartHeroTimer();return;}
     const categoryLink=event.target.closest('[data-category]');

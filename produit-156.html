@@ -16,13 +16,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="styles.css?v=4">
   <link rel="stylesheet" href="commerce.css?v=4">
   <link rel="stylesheet" href="latin.css?v=4">
   <link rel="stylesheet" href="pages.css?v=6">
   <script src="api-config.js?v=2" defer></script>
   <script src="store.js?v=2" defer></script>
-  <script src="app.js?v=6" defer></script>
+  <script src="app.js?v=7" defer></script>
   <script src="commerce.mjs?v=9" type="module"></script>
 </head>
 <body data-page="product" data-product-id="p-156">
@@ -34,6 +34,7 @@
     <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M4.5 22v-2a7.5 7.5 0 0 1 15 0v2"/></symbol>
     <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
     <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 5h18M3 12h18M3 19h14"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c5 5 5 13 0 18M12 3c-5 5-5 13 0 18"/></symbol>
     <symbol id="i-close" viewBox="0 0 24 24"><path d="m5 5 14 14M19 5 5 19"/></symbol>
     <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
     <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v11h-6v-7H9v7H3Z"/></symbol>
@@ -61,6 +62,13 @@
     </div>
     <div class="main-header container">
       <button class="icon-button mobile-menu" type="button" data-action="menu" data-i18n-label="menu" aria-label="القائمة" aria-controls="category-dialog"><svg class="icon"><use href="#i-menu"/></svg></button>
+      <details id="header-language-picker" class="header-language-picker">
+        <summary aria-label="اللغة : العربية" aria-controls="header-language-options" aria-expanded="false"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg><svg class="icon header-language-chevron" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+        <div class="header-language-panel" id="header-language-options">
+          <span id="header-current-language" class="header-current-language" lang="ar" dir="rtl">العربية</span>
+          <button type="button" id="header-other-language" data-lang="fr" lang="fr" dir="ltr">Français</button>
+        </div>
+      </details>
       <a class="brand" href="./" aria-label="BADEELDZ — البديل"><img src="assets/logo.png" width="120" height="116" alt="BADEELDZ — البديل" fetchpriority="high"></a>
       <form class="search-form" role="search">
         <label class="sr-only" for="site-search" data-i18n="search">البحث عن منتج</label>

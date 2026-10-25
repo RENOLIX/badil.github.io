@@ -90,3 +90,52 @@ html[lang=ar] .shopping-invitation h2 { letter-spacing: 0; }
 @media (prefers-reduced-motion: reduce) {
   .shopping-invitation .btn-creuse { transition: none; }
 }
+
+.header-language-picker { display: none; }
+@media (max-width: 767px) {
+  .main-header > .mobile-menu { position: absolute; right: 13px; left: auto; margin: 0; }
+  .header-language-picker {
+    display: block;
+    position: absolute;
+    left: 13px;
+    top: 23px;
+    z-index: 12;
+    color: #315a27;
+  }
+  .header-language-picker summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    width: 40px;
+    height: 38px;
+    border: 1px solid #dce8d8;
+    border-radius: 11px;
+    background: #f4f8f1;
+    list-style: none;
+    cursor: pointer;
+  }
+  .header-language-picker summary::-webkit-details-marker { display: none; }
+  .header-language-picker summary > .icon { width: 20px; height: 20px; stroke-width: 1.5; }
+  .header-language-picker summary > .header-language-chevron { width: 9px; height: 9px; transform: rotate(90deg); }
+  .header-language-picker[open] summary { border-color: #8bbd76; background: #edf6e9; }
+  .header-language-picker[open] .header-language-chevron { transform: rotate(270deg); }
+  .header-language-picker summary:focus-visible { outline: 3px solid #c9a23b; outline-offset: 4px; }
+  .header-language-panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    width: 166px;
+    padding: 8px;
+    border: 1px solid #d9e6d2;
+    border-radius: 13px;
+    background: #fff;
+    box-shadow: 0 10px 28px #264c221c;
+    text-align: center;
+  }
+  .header-current-language { display: block; padding: 5px 8px 10px; font-size: 11px; font-weight: 600; color: #74856d; }
+  .header-language-panel button { width: 100%; min-height: 43px; padding: 9px 12px; border-radius: 8px; background: #f0f7eb; color: #315a27; font-size: 13px; font-weight: 600; }
+  .header-language-panel button:hover { background: #e5f1de; }
+  .header-language-panel [lang=fr] { font-family: 'Public Sans', sans-serif; }
+  .header-language-panel [lang=ar] { font-family: 'Cairo', sans-serif; }
+}
