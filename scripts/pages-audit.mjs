@@ -5,7 +5,7 @@ const pages=['index.html',...catalog.map(p=>'produit-'+p.id.replace('p-','')+'.h
 for(const path of pages){
   const html=await readFile(new URL(path,root),'utf8');
   assert.doesNotMatch(html,/href=["'][^"']*admin\/|data-action="account"|id="info-dialog"|id="product-dialog"|id="basket-dialog"|id="checkout-dialog"/,path+' must keep public pages separate from admin and modal commerce');
-  assert.match(html,/latin\.css/);assert.match(html,/commerce\.mjs\?v=8/);
+  assert.match(html,/latin\.css/);assert.match(html,/commerce\.mjs\?v=9/);
   if(path!=='index.html'){assert.match(html,/data-page=/);assert.match(html,new RegExp('rel="canonical" href="https://renolix.github.io/badil.github.io/'+path.replace('.','\\.')));}
 }
 for(const product of catalog){const page=await readFile(new URL('produit-'+product.id.replace('p-','')+'.html',root),'utf8');assert.match(page,/<h1>.*?<\/h1><p class="detail-short-description">[^<]+<\/p><p class="detail-price"/);assert.ok(page.includes('data-product-id="'+product.id+'"'));assert.ok(page.includes(product.name.ar.replaceAll('&','&amp;')));}
