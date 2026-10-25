@@ -7,3 +7,86 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
 
 .dialog-languages{justify-content:center;padding:21px 25px}.mobile-language-picker{position:relative;z-index:1;width:min(280px,100%);border:1px solid #d3e3ce;border-radius:14px;background:linear-gradient(135deg,#f6faf3,#edf6e9);box-shadow:0 4px 15px #35552a08;color:#315a27}.mobile-language-picker summary{list-style:none;display:grid;grid-template-columns:24px minmax(0,1fr) 24px;align-items:center;gap:13px;cursor:pointer;padding:14px 17px;min-height:54px;border-radius:13px;text-align:center;user-select:none}.mobile-language-picker summary::-webkit-details-marker{display:none}.mobile-language-picker summary>span{font-size:14px;font-weight:700;line-height:1.7}.mobile-language-picker summary:focus-visible{outline:3px solid #c9a23b;outline-offset:4px}.mobile-language-picker .language-globe{width:22px;height:22px;stroke-width:1.5;color:#59844b}.mobile-language-picker .language-chevron{width:18px;height:18px;justify-self:center;transition:transform .2s}.mobile-language-picker[open]{border-color:#8bbd76;box-shadow:0 5px 18px #35552a12}.mobile-language-picker[open] .language-chevron{transform:rotate(180deg)}.mobile-language-options{position:absolute;inset-inline:0;top:calc(100% + 8px);padding:7px;background:#fff;border:1px solid #d9e6d2;border-radius:12px;box-shadow:0 10px 28px #264c221c}.mobile-language-options button{display:block;width:100%;padding:12px 15px;text-align:center;font-size:14px;font-weight:600;color:#315a27;border-radius:8px;background:#f6faf3;min-height:45px}.mobile-language-options button:hover{background:#eaf4e3}.mobile-language-picker [lang=fr]{font-family:'Public Sans',sans-serif}.mobile-language-picker [lang=ar]{font-family:'Cairo',sans-serif}@media(max-width:767px){.dialog-languages{padding:18px 22px}.mobile-language-picker{width:min(260px,100%)}}
+
+/* The inset button shares its surface with the invitation block. */
+.shopping-invitation {
+  --shopping-bg: #edf1e9;
+  --shopping-light: #ffffff;
+  --shopping-shadow: #cbd4c5;
+  background: var(--shopping-bg);
+  color: #284629;
+  padding-block: 62px;
+}
+.shopping-invitation-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+}
+.shopping-invitation-copy { max-width: 690px; }
+.shopping-invitation-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 13px;
+  color: #51744a;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+.shopping-invitation-eyebrow .icon { width: 19px; height: 19px; }
+.shopping-invitation h2 {
+  font-size: clamp(26px, 2.7vw, 38px);
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -.7px;
+}
+.shopping-invitation-description {
+  margin-top: 13px;
+  max-width: 610px;
+  font-size: 14px;
+  line-height: 1.9;
+  color: #53634f;
+}
+.shopping-invitation .btn-creuse {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  flex: 0 0 280px;
+  width: 280px;
+  min-height: 70px;
+  padding: 18px 22px;
+  border: none;
+  border-radius: 20px;
+  background: var(--shopping-bg);
+  color: #31572c;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: inset 10px 10px 20px var(--shopping-shadow), inset -10px -10px 20px var(--shopping-light);
+  transition: color .2s, box-shadow .2s;
+}
+.shopping-invitation .btn-creuse .icon { width: 18px; height: 18px; }
+.shopping-invitation .btn-creuse:hover { color: var(--green-dark); }
+.shopping-invitation .btn-creuse:active {
+  box-shadow: inset 14px 14px 24px var(--shopping-shadow), inset -14px -14px 24px var(--shopping-light);
+}
+.shopping-invitation .btn-creuse:focus-visible { outline: 3px solid #527a47; outline-offset: 6px; }
+html[dir=rtl] .shopping-invitation .btn-creuse .icon { transform: rotate(180deg); }
+html[lang=ar] .shopping-invitation-eyebrow,
+html[lang=ar] .shopping-invitation h2 { letter-spacing: 0; }
+@media (max-width: 767px) {
+  .shopping-invitation { padding-block: 43px 46px; }
+  .shopping-invitation-inner { flex-direction: column; gap: 27px; text-align: center; }
+  .shopping-invitation-eyebrow { justify-content: center; font-size: 10px; margin-bottom: 12px; }
+  .shopping-invitation h2 { font-size: 27px; }
+  .shopping-invitation-description { margin-top: 14px; font-size: 13px; }
+  .shopping-invitation .btn-creuse { flex: none; width: min(280px, 100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shopping-invitation .btn-creuse { transition: none; }
+}
