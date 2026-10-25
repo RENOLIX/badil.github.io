@@ -11,7 +11,7 @@ const page=document.body.dataset.page||'home',pageProduct=document.body.dataset.
 const staticProductIds=new Set();let remoteLoaded=false;
 const state={products:[],locations:[],rates:[],cart:[],wishlist:[],view:window.BADIL_VIEW||{language:document.documentElement.lang,category:'',query:''},limit:24,sort:'featured',signature:'',selectedProduct:null,selectedVariant:'',orderKey:null};
 const lang=()=>state.view.language==='fr'?'fr':'ar';const t=key=>words[lang()][key]||key;
-const money=amount=>amount===null?t('quote'):`${new Intl.NumberFormat('fr-FR').format(amount)} DA`;
+const money=amount=>amount===null?t('quote'):`${new Intl.NumberFormat('fr-FR').format(amount)} ${lang()==='ar'?'دج':'DA'}`;
 const image=product=>productImageUrl(product.image,window.BADIL_API);
 const normal=s=>String(s).normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase();
 const readStorage=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key))||fallback;}catch{return fallback;}};

@@ -80,7 +80,8 @@
     const cards=store.categories.map(c=>`<a class="category-card" href="${homeURL({categorie:c.id})}" data-category="${c.id}" dir="${language==='ar'?'rtl':'ltr'}"><img src="${categoryImage(c)}" width="150" height="112" alt="" loading="lazy"><span>${c[language]}</span></a>`).join('');
     if(!$('#category-track'))return;
     $('#category-track').innerHTML=`<div class="category-group">${cards}</div><div class="category-group" aria-hidden="true">${cards.replaceAll('<a ', '<a tabindex="-1" ')}</div>`;
-    $('#category-strip').scrollLeft=0;
+    const firstGroup=$('#category-track .category-group');
+    $('#category-strip').scrollLeft=language==='ar'?firstGroup.offsetWidth+parseFloat(getComputedStyle($('#category-track')).gap):0;
   }
   function renderSlides() {
     if(!$('#hero-slides'))return;
@@ -90,8 +91,9 @@
   }
   function updateSlideStatus() { $('#slide-status').textContent=`${t('slide')} ${currentSlide+1} ${t('of')} ${store.slides.length}`; }
   function showSlide(index) {
+    const previousSlide=currentSlide;
     currentSlide=(index+store.slides.length)%store.slides.length;
-    $$('.hero-slide').forEach((el,i)=>{el.classList.toggle('is-active',i===currentSlide);el.setAttribute('aria-hidden',String(i!==currentSlide));el.inert=i!==currentSlide;});
+    $$('.hero-slide').forEach((el,i)=>{el.classList.toggle('is-leaving',language==='ar'&&i===previousSlide&&previousSlide!==currentSlide);el.classList.toggle('is-active',i===currentSlide);el.setAttribute('aria-hidden',String(i!==currentSlide));el.inert=i!==currentSlide;});
     $$('.hero-dot').forEach((el,i)=>el.setAttribute('aria-current',String(i===currentSlide)));
     updateSlideStatus();
   }
@@ -176,9 +178,14 @@
     const elapsed=Math.min(now-lastFrame,60);lastFrame=now;
     if(!categoryPaused&&!stripHover&&!stripFocus&&!document.hidden&&!document.querySelector('dialog[open]')&&now>touchUntil){
       scrollFraction+=elapsed*.025;
-      if(scrollFraction>=1){strip.scrollLeft+=Math.floor(scrollFraction);scrollFraction%=1;}
       const group=strip.querySelector('.category-group');
-      if(group&&strip.scrollLeft>=group.offsetWidth+parseFloat(getComputedStyle($('#category-track')).gap))strip.scrollLeft=0;
+      if(group&&scrollFraction>=1){
+        const distance=Math.floor(scrollFraction),loopWidth=group.offsetWidth+parseFloat(getComputedStyle($('#category-track')).gap);
+        let nextPosition=strip.scrollLeft+(language==='ar'?-distance:distance);scrollFraction%=1;
+        if(nextPosition<0)nextPosition+=loopWidth;
+        if(nextPosition>=loopWidth)nextPosition-=loopWidth;
+        strip.scrollLeft=nextPosition;
+      }
     }
     if(strip)requestAnimationFrame(animateCategories);
   }

@@ -139,3 +139,11 @@ html[lang=ar] .shopping-invitation h2 { letter-spacing: 0; }
   .header-language-panel [lang=fr] { font-family: 'Public Sans', sans-serif; }
   .header-language-panel [lang=ar] { font-family: 'Cairo', sans-serif; }
 }
+
+/* Arabic banners enter from the left and travel to the right. */
+html[lang=ar] .hero-slide {
+  transform: translateX(-100%);
+  transition: transform .8s ease;
+}
+html[lang=ar] .hero-slide.is-active { transform: translateX(0); z-index: 2; }
+html[lang=ar] .hero-slide.is-leaving { transform: translateX(100%); opacity: 1; z-index: 1; }
