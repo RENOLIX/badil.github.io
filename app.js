@@ -85,11 +85,14 @@
   }
   function renderSlides() {
     if(!$('#hero-slides'))return;
-    $('#hero-slides').innerHTML=store.slides.map((slide,i)=>`<article class="hero-slide ${slide.campaign?'campaign':''} ${i===currentSlide?'is-active':''}" aria-hidden="${i!==currentSlide}" ${i!==currentSlide?'inert':''}><img src="${slide.imageLocalized?.[language]||slide.image}" alt="${slide[language][2]}" width="1600" height="1000" ${i===0?'fetchpriority="high"':'loading="lazy"'}>${slide.campaign?'<span class="delivery-motion-dot" aria-hidden="true"></span>':''}<div class="slide-copy ${slide.campaign?'sr-only':''}"><span class="banner-eyebrow">BADEELDZ</span><${i===0?'h1':'h2'}>${slide[language][0]}</${i===0?'h1':'h2'}><p>${slide[language][1]}</p><a class="hero-cta" href="${homeURL({categorie:slide.category})}" data-category="${slide.category}">${t('discover')}${icon('chevron')}</a></div></article>`).join('');
+    $('#hero-slides').innerHTML=store.slides.map((slide,i)=>{
+      const copy=slide.imageOnly?'':`<div class="slide-copy ${slide.campaign?'sr-only':''}"><span class="banner-eyebrow">BADEELDZ</span><${i===0?'h1':'h2'}>${slide[language][0]}</${i===0?'h1':'h2'}><p>${slide[language][1]}</p><a class="hero-cta" href="${homeURL({categorie:slide.category})}" data-category="${slide.category}">${t('discover')}${icon('chevron')}</a></div>`;
+      return `<article class="hero-slide ${slide.campaign?'campaign':''} ${slide.imageOnly?'image-only':''} ${i===currentSlide?'is-active':''}" aria-hidden="${i!==currentSlide}" ${i!==currentSlide?'inert':''}><img src="${slide.imageLocalized?.[language]||slide.image}" alt="${slide[language][2]}" width="${slide.width||1600}" height="${slide.height||1000}" ${i===0?'fetchpriority="high"':'loading="lazy"'}>${slide.campaign?'<span class="delivery-motion-dot" aria-hidden="true"></span>':''}${copy}</article>`;
+    }).join('');
     $('#hero-dots').innerHTML=store.slides.map((_,i)=>`<button class="hero-dot" type="button" data-slide="${i}" aria-label="${t('slide')} ${i+1} ${t('of')} ${store.slides.length}" aria-current="${i===currentSlide}"></button>`).join('');
     updateSlideStatus();
   }
-  function updateSlideStatus() { $('#slide-status').textContent=`${t('slide')} ${currentSlide+1} ${t('of')} ${store.slides.length}`; }
+  function updateSlideStatus() { $('#slide-status').textContent=`${t('slide')} ${currentSlide+1} ${t('of')} ${store.slides.length}`;$('#hero-slider').classList.toggle('image-only-active',Boolean(store.slides[currentSlide].imageOnly)); }
   function showSlide(index) {
     const previousSlide=currentSlide;
     currentSlide=(index+store.slides.length)%store.slides.length;

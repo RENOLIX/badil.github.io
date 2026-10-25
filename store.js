@@ -4,7 +4,7 @@ window.BADIL_STORE = {
   slides: [
     { image: 'assets/hero-delivery-fr.png', imageLocalized: {fr:'assets/hero-delivery-fr.png',ar:'assets/hero-delivery-ar.png'}, campaign:true, fr: ['Livraison gratuite à Dellys', 'Dès 4 000 DA d’achat. Offre valable uniquement dans la commune de Dellys.', 'Livraison gratuite à Dellys dès 4 000 DA d’achat'], ar: ['توصيل مجاني إلى دلس', 'ابتداءً من 4 000 دج من المشتريات. العرض خاص ببلدية دلس فقط.', 'توصيل مجاني إلى دلس ابتداءً من 4 000 دج من المشتريات'], category: 'honey' },
     { image: 'assets/hero-2.jpg', fr: ['Des saveurs riches en authenticité.', 'Explorez notre univers de plantes et d’épices.', 'Épices et plantes aromatiques'], ar: ['نكهات أصيلة من الطبيعة.', 'اكتشف عالم الأعشاب والتوابل.', 'توابل وأعشاب عطرية'], category: 'herbs-spices' },
-    { image: 'assets/hero-3.jpg', fr: ['Un instant pour vous.', 'Laissez place à vos rituels du quotidien.', 'Thé et infusion'], ar: ['لحظة من أجلك.', 'مساحة لطقوسك اليومية.', 'شاي وأعشاب'], category: 'tea-tisanes' },
+    { image: 'assets/hero-badeeldz.png', imageOnly:true, width:1280, height:697, fr: ['', '', 'BADEELDZ — البديل'], ar: ['', '', 'BADEELDZ — البديل'] },
     { image: 'assets/hero-4.jpg', fr: ['La douceur à l’état naturel.', 'Découvrez l’univers du miel.', 'Miel naturel'], ar: ['حلاوة من قلب الطبيعة.', 'اكتشف عالم العسل.', 'عسل طبيعي'], category: 'honey' },
     { image: 'assets/hero-5.jpg', fr: ['Naturellement, au quotidien.', 'Plantes et senteurs pour votre bien-être.', 'Lavande et nature'], ar: ['الطبيعة في كل يوم.', 'نباتات وروائح لعنايتك اليومية.', 'خزامى وطبيعة'], category: 'natural-oils' }
   ],

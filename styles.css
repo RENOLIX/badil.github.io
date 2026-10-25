@@ -147,3 +147,10 @@ html[lang=ar] .hero-slide {
 }
 html[lang=ar] .hero-slide.is-active { transform: translateX(0); z-index: 2; }
 html[lang=ar] .hero-slide.is-leaving { transform: translateX(100%); opacity: 1; z-index: 1; }
+
+.hero-slide.image-only { background: #fff; }
+.hero-slide.image-only::after { display: none; }
+.hero-slide.image-only > img { object-fit: contain; }
+.hero-slider.image-only-active .hero-dot { background: #668b5b55; }
+.hero-slider.image-only-active .hero-dot[aria-current=true] { background: #315a27; }
+.hero-slider.image-only-active .hero-pause { background: #e7efdf; color: #315a27; }
