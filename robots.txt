@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 Disallow: /badil.github.io/admin/
-Sitemap: https://renolix.github.io/badil.github.io/sitemap.xml
+Sitemap: https://badeeldz.com/sitemap.xml

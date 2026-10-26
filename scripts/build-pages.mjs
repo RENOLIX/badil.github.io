@@ -1,6 +1,6 @@
 import {summarizeProduct} from '../product-data.mjs';
 import {readFile,writeFile} from 'node:fs/promises';
-const root=new URL('../',import.meta.url),base='https://renolix.github.io/badil.github.io/';
+const root=new URL('../',import.meta.url),base='https://badeeldz.com/';
 const template=await readFile(new URL('index.html',root),'utf8'),products=JSON.parse(await readFile(new URL('catalog.json',root),'utf8'));
 const escape=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 const pages=products.map(p=>({file:'produit-'+p.id.replace('p-','')+'.html',kind:'product',product:p,title:p.name.ar+' | '+p.name.fr,description:p.description.ar[0],content:'<article class="product-detail"><div class="detail-photo"><img src="'+escape(p.image)+'" alt="'+escape(p.name.ar)+'" width="700" height="700"></div><div class="detail-information"><h1>'+escape(p.name.ar)+'</h1><p class="detail-short-description">'+escape(summarizeProduct(p,'ar'))+'</p><p class="detail-price" dir="ltr">'+p.price+' دج</p></div></article><section class="long-description"><h2>وصف المنتج</h2>'+p.description.ar.map(text=>'<p>'+escape(text)+'</p>').join('')+'</section>'}));

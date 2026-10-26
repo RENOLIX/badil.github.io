@@ -1,6 +1,6 @@
 # BADEELDZ — البديل
 
-Boutique algérienne français/arabe, publiée sur [GitHub Pages](https://renolix.github.io/badil.github.io/), avec un [espace de gestion](https://renolix.github.io/badil.github.io/admin/) connecté au projet Firebase **badeldz**.
+Boutique algérienne français/arabe, publiée sur [badeeldz.com](https://badeeldz.com/) via GitHub Pages, avec un [espace de gestion](https://badeeldz.com/admin/) connecté au projet Firebase **badeldz**.
 
 ## Boutique
 

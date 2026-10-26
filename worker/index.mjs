@@ -238,7 +238,7 @@ async function route(request,env,ctx){
   fail(404,'NOT_FOUND','Action introuvable.');
 }
 export default{async fetch(request,env,ctx){
-  const origin=request.headers.get('Origin');const allowed=[env.STORE_ORIGIN,'http://127.0.0.1:4173','http://localhost:4173'];
+  const origin=request.headers.get('Origin');const allowed=[env.STORE_ORIGIN,...(env.ADDITIONAL_STORE_ORIGINS||[]),'http://127.0.0.1:4173','http://localhost:4173'];
   const cors=origin&&allowed.includes(origin)?{'Access-Control-Allow-Origin':origin,'Vary':'Origin'}:{};
   const headers={...cors,'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff','X-Robots-Tag':'noindex','Referrer-Policy':'no-referrer'};
   if(origin&&!allowed.includes(origin))return new Response(JSON.stringify({error:{code:'ORIGIN_DENIED',message:'Origine non autorisée.'}}),{status:403,headers});
