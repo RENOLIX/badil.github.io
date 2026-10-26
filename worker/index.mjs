@@ -3,6 +3,7 @@ import {productImages} from '../product-data.mjs';
 import locations from '../locations.json' with {type:'json'};
 import {normalizeProductInput,validateImageBytes,MAX_IMAGE_BYTES} from './products.mjs';
 import {mediaImageKey} from '../product-data.mjs';
+import {adminProfileHasAccess,deleteAdminUser} from './users.mjs';
 
 const PROJECT='badeldz';
 const FS=`https://firestore.googleapis.com/v1/projects/${PROJECT}/databases/(default)/documents`;
@@ -46,7 +47,7 @@ async function googleToken(env){
 async function google(env,url,method='GET',body){
   const response=await fetch(url,{method,headers:{Authorization:`Bearer ${await googleToken(env)}`,'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});
   const result=await response.json().catch(()=>({}));
-  if(!response.ok){if(response.status===404)return null;if(result.error?.status==='FAILED_PRECONDITION'||result.error?.status==='ABORTED')fail(409,'WRITE_CONFLICT','Les données ont changé. Réessayez.');if(response.status===409)throw new HttpError(409,'ALREADY_EXISTS','Cet élément existe déjà.');if(response.status===400){const message=result.error?.message||'';if(/EMAIL_EXISTS/.test(message))fail(409,'EMAIL_EXISTS','Cette adresse e-mail est déjà utilisée.');if(/INVALID_PASSWORD|WEAK_PASSWORD/.test(message))fail(400,'WEAK_PASSWORD','Le mot de passe doit contenir au moins 12 caractères.');}fail(502,'FIREBASE_ERROR','Firebase ne peut pas traiter cette opération pour le moment.');}return result;
+  if(!response.ok){if(url===`${AUTH}/accounts:delete`){if(/\bUSER_NOT_FOUND\b/.test(result.error?.message||''))return {alreadyDeleted:true};fail(502,'FIREBASE_ERROR','Firebase ne peut pas supprimer ce compte pour le moment. Réessayez.');}if(response.status===404)return null;if(result.error?.status==='FAILED_PRECONDITION'||result.error?.status==='ABORTED')fail(409,'WRITE_CONFLICT','Les données ont changé. Réessayez.');if(response.status===409)throw new HttpError(409,'ALREADY_EXISTS','Cet élément existe déjà.');if(response.status===400){const message=result.error?.message||'';if(/EMAIL_EXISTS/.test(message))fail(409,'EMAIL_EXISTS','Cette adresse e-mail est déjà utilisée.');if(/INVALID_PASSWORD|WEAK_PASSWORD/.test(message))fail(400,'WEAK_PASSWORD','Le mot de passe doit contenir au moins 12 caractères.');}fail(502,'FIREBASE_ERROR','Firebase ne peut pas traiter cette opération pour le moment.');}return result;
 }
 async function snapshot(env,path){const raw=await google(env,FS+'/'+path);return raw?{raw,data:documentData(raw)}:null;}
 function inventoryWrites(changes,snapshots){return changes.map(change=>({update:{name:ROOT+'/products/'+change.productId,fields:fields({stock:change.stock,updatedAt:now()})},updateMask:{fieldPaths:['stock','updatedAt']},currentDocument:{updateTime:snapshots.find(s=>s?.data.id===change.productId).raw.updateTime}}));}
@@ -72,7 +73,7 @@ async function authenticate(request,env){
   const publicKey=await crypto.subtle.importKey('jwk',jwk,{name:'RSASSA-PKCS1-v1_5',hash:'SHA-256'},false,['verify']);
   if(!await crypto.subtle.verify('RSASSA-PKCS1-v1_5',publicKey,unbase64(parts[2]),encoder.encode(`${parts[0]}.${parts[1]}`)))fail(401,'INVALID_TOKEN','Session invalide.');
   const profile=await getDoc(env,`users/${payload.sub}`);
-  if(!profile||profile.disabled||!['owner','admin','manager','operator'].includes(profile.role)||(profile.tokenValidAfter&&payload.auth_time<profile.tokenValidAfter))fail(403,'ACCESS_DENIED','Ce compte ne dispose pas des droits nécessaires.');
+  if(!adminProfileHasAccess(profile,payload.auth_time))fail(403,'ACCESS_DENIED','Ce compte ne dispose pas des droits nécessaires.');
   return {...profile,uid:payload.sub};
 }
 function allowRoles(user,roles){if(!roles.includes(user.role))fail(403,'ACCESS_DENIED','Cette action est réservée aux administrateurs.');}
@@ -189,13 +190,23 @@ async function manageUsers(request,env,user,id){
   allowRoles(user,['owner','admin']);
   if(request.method==='GET')return {users:await listDocs(env,'users')};
   const body=await readBody(request);
+  if(request.method==='DELETE'){
+    let targetSnapshot;
+    return deleteAdminUser(user,id,body.confirmationEmail,{
+      getProfile:async uid=>{targetSnapshot=await snapshot(env,`users/${uid}`);return targetSnapshot?.data;},
+      markDeleting:async(uid,patch)=>commit(env,[{update:{name:ROOT+'/users/'+uid,fields:fields(patch)},updateMask:{fieldPaths:Object.keys(patch)},currentDocument:{updateTime:targetSnapshot.raw.updateTime}}]),
+      deleteAuth:uid=>google(env,`${AUTH}/accounts:delete`,'POST',{localId:uid}),
+      deleteProfile:uid=>google(env,`${FS}/users/${uid}`,'DELETE')
+    });
+  }
   if(request.method==='POST'){
     const email=clean(body.email,'e-mail',5,180).toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))fail(400,'INVALID_EMAIL','Adresse e-mail invalide.');
     const password=clean(body.password,'mot de passe',12,128);const role=body.role;if(!['admin','manager','operator'].includes(role))fail(400,'INVALID_ROLE','Rôle invalide.');const displayName=clean(body.displayName,'nom',2,100);
     const created=await google(env,`${AUTH}/accounts`,'POST',{email,password,displayName,emailVerified:false,disabled:false});
     const profile={uid:created.localId,email,displayName,role,disabled:false,createdAt:now(),createdBy:user.uid,tokenValidAfter:0};await setDoc(env,`users/${profile.uid}`,profile);return profile;
   }
-  const target=await getDoc(env,`users/${id}`);if(!target)fail(404,'NOT_FOUND','Compte introuvable.');
+  const targetSnapshot=await snapshot(env,`users/${id}`),target=targetSnapshot?.data;if(!target)fail(404,'NOT_FOUND','Compte introuvable.');
+  if(target.deletionPending)fail(409,'USER_DELETION_PENDING','Ce compte est en cours de suppression. Utilisez « Réessayer la suppression ».');
   if(target.role==='owner'&&user.uid!==target.uid)fail(403,'OWNER_PROTECTED','Le compte propriétaire est protégé.');
   if(body.role!==undefined){if(target.role==='owner'||id===user.uid)fail(400,'OWNER_PROTECTED','Vous ne pouvez pas modifier ce rôle.');if(!['admin','manager','operator'].includes(body.role))fail(400,'INVALID_ROLE','Rôle invalide.');target.role=body.role;}
   const changes={localId:id};
@@ -203,7 +214,7 @@ async function manageUsers(request,env,user,id){
   if(body.displayName!==undefined){target.displayName=clean(body.displayName,'nom',2,100);changes.displayName=target.displayName;}
   if(body.password){changes.password=clean(body.password,'mot de passe',12,128);target.tokenValidAfter=Math.floor(Date.now()/1000);changes.validSince=String(target.tokenValidAfter);}
   if(Object.keys(changes).length>1)await google(env,`${AUTH}/accounts:update`,'POST',changes);
-  target.updatedAt=now();await setDoc(env,`users/${id}`,target);return target;
+  target.updatedAt=now();await commit(env,[{update:{name:ROOT+'/users/'+id,fields:fields(target)},currentDocument:{updateTime:targetSnapshot.raw.updateTime}}]);return target;
 }
 const catalogCacheKey=request=>new Request(new URL('/api/cache/catalog',request.url).href);
 async function route(request,env,ctx){
@@ -234,7 +245,7 @@ async function route(request,env,ctx){
     if(request.method==='PUT'){const {rates}=await readBody(request);if(!Array.isArray(rates)||rates.length!==69||new Set(rates.map(r=>r.code)).size!==69)fail(400,'INVALID_RATES','Les 69 wilayas doivent être renseignées une seule fois.');const writes=rates.map(rate=>{const wilaya=locations.find(w=>w.code===rate.code);if(!wilaya||!validPrice(rate.home)||!validPrice(rate.desk)||typeof rate.enabled!=='boolean')fail(400,'INVALID_RATES','Tarif ou wilaya invalide.');return{update:{name:`${ROOT}/deliveryRates/${rate.code}`,fields:fields({code:rate.code,name:wilaya.name,home:rate.home,desk:rate.desk,enabled:rate.enabled,updatedAt:now()})}};});await commit(env,writes);await caches.default.delete(catalogCacheKey(request));return {ok:true};}
   }
   if(path==='/api/admin/users'&&['GET','POST'].includes(request.method))return manageUsers(request,env,user);
-  const userId=path.match(/^\/api\/admin\/users\/([A-Za-z0-9_-]{1,128})$/)?.[1];if(userId&&request.method==='PATCH')return manageUsers(request,env,user,userId);
+  const userId=path.match(/^\/api\/admin\/users\/([A-Za-z0-9_-]{1,128})$/)?.[1];if(userId&&['PATCH','DELETE'].includes(request.method))return manageUsers(request,env,user,userId);
   fail(404,'NOT_FOUND','Action introuvable.');
 }
 export default{async fetch(request,env,ctx){

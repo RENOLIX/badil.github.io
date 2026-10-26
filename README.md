@@ -21,7 +21,7 @@ Connexion Firebase Authentication par e-mail et mot de passe, sans vérification
 - **Commandes** : les 500 plus récentes, recherche, statuts, coordonnées, articles, ajustement des prix manquants, frais et notes internes. Une commande incomplètement chiffrée ne peut pas être confirmée.
 - **Produits** : noms et descriptions français/arabe, prix par format, disponibilité.
 - **Livraison** : 69 wilayas, tarifs domicile/bureau, suspension d’une destination et modification groupée. Les tarifs sont initialement vides en attendant les montants du propriétaire.
-- **Utilisateurs** : création et gestion des rôles administrateur, gestionnaire et opérateur ; suspension des accès. Le compte propriétaire est protégé. Les nouveaux profils se connectent immédiatement sans e-mail de vérification.
+- **Utilisateurs** : création et gestion des rôles administrateur, gestionnaire et opérateur ; suspension des accès et suppression définitive avec confirmation de l’e-mail. Le compte propriétaire et le compte connecté ne peuvent pas être supprimés. La suppression coupe immédiatement l’accès à l’API, puis retire le compte Firebase Authentication et son profil Firestore ; une opération interrompue reste bloquée et peut être reprise. Les commandes et produits sont conservés. Les nouveaux profils se connectent immédiatement sans e-mail de vérification.
 
 ## Architecture et sécurité
 
