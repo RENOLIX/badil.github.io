@@ -3,12 +3,12 @@ class ProductError extends Error{constructor(code,message,status=400){super(mess
 const reject=(code,message,status)=>{throw new ProductError(code,message,status);};
 function text(value,label,min=2,max=400){if(typeof value!=='string'||value.trim().length<min||value.trim().length>max||/[\u0000-\u0008]/.test(value))reject('INVALID_FIELD','Champ invalide : '+label);return value.trim();}
 const priceValid=value=>value===null||(Number.isInteger(value)&&value>=0&&value<=1000000);
-export function normalizeProductInput(body,origin,existing=null){
+export function normalizeProductInput(body,origin,existing=null,categoryIds=CATEGORY_IDS){
   if(!body||typeof body!=='object'||Array.isArray(body))reject('INVALID_FIELD','Données du produit invalides.');
   const product=existing?structuredClone(existing):{available:true,variants:[],categories:[],isHoney:false};
   if(body.name)product.name={fr:text(body.name.fr,'nom français',2,180),ar:text(body.name.ar,'nom arabe',2,180)};
   if(!product.name)reject('INVALID_FIELD','Les deux noms du produit sont requis.');
-  if(body.categories){if(!Array.isArray(body.categories)||body.categories.length<1||body.categories.length>5||new Set(body.categories).size!==body.categories.length||body.categories.some(id=>!CATEGORY_IDS.includes(id)))reject('INVALID_CATEGORY','Choisissez une catégorie valide.');product.categories=body.categories;}
+  if(body.categories){if(!Array.isArray(body.categories)||body.categories.length<1||body.categories.length>5||new Set(body.categories).size!==body.categories.length||body.categories.some(id=>!categoryIds.includes(id)))reject('INVALID_CATEGORY','Choisissez une catégorie valide.');product.categories=body.categories;}
   if(!product.categories.length)reject('INVALID_CATEGORY','Choisissez au moins une catégorie.');
   if(body.isHoney!==undefined){if(typeof body.isHoney!=='boolean')reject('INVALID_FIELD','Type de produit invalide.');product.isHoney=body.isHoney;}else if(!existing)product.isHoney=product.categories.includes('honey');
   const format=body.formatType??saleType(product);if(!['unit','honey','custom'].includes(format))reject('INVALID_FORMAT','Format de vente invalide.');

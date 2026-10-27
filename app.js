@@ -42,7 +42,8 @@
   let heroPaused = reducedMotion.matches, categoryPaused = reducedMotion.matches;
   let heroTimer, heroHover = false, heroFocus = false, stripHover = false, stripFocus = false;
   const icon = (name, cls='icon') => `<svg class="${cls}" aria-hidden="true"><use href="#i-${name}"/></svg>`;
-  const categoryImage = (category) => `assets/categories/category-${store.categories.indexOf(category)+1}.jpg`;
+  const escape=value=>String(value??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
+  const categoryImage = category => category.image||`assets/categories/category-${store.categories.indexOf(category)+1}.jpg`;
   const t = (key) => text[language][key] || key;
 
   const languagePicker=$('#menu-language-picker');
@@ -72,12 +73,11 @@
     document.querySelectorAll('[data-page-link]').forEach(link=>{const u=new URL(link.getAttribute('href'),document.baseURI);u.searchParams.set('lang',language);link.href=u.href;});
   }
   function renderCategories() {
-    const link = (cat,withIcon=false) => `<a href="${homeURL({categorie:cat.id})}" data-category="${cat.id}">${cat[language]}${withIcon?icon('chevron'):''}</a>`;
-    const primaryIds=['herbs-spices','natural-oils','black-seed-oil','honey','tea-tisanes'];
-    $('#main-nav-links').innerHTML=primaryIds.map(id=>link(store.categories.find(c=>c.id===id),true)).join('');
-    $('#footer-categories').innerHTML=['natural-oils','herbs-spices','honey','natural-soap'].map(id=>link(store.categories.find(c=>c.id===id))).join('');
-    $('#category-menu').innerHTML=store.categories.map(c=>`<a href="${homeURL({categorie:c.id})}" data-category="${c.id}"><img src="${categoryImage(c)}" width="36" height="36" alt="" loading="lazy"><span>${c[language]}</span></a>`).join('');
-    const cards=store.categories.map(c=>`<a class="category-card" href="${homeURL({categorie:c.id})}" data-category="${c.id}" dir="${language==='ar'?'rtl':'ltr'}"><img src="${categoryImage(c)}" width="150" height="112" alt="" loading="lazy"><span>${c[language]}</span></a>`).join('');
+    const link = (cat,withIcon=false) => `<a href="${homeURL({categorie:cat.id})}" data-category="${escape(cat.id)}">${escape(cat[language])}${withIcon?icon('chevron'):''}</a>`;
+    $('#main-nav-links').innerHTML=['herbs-spices','natural-oils','black-seed-oil','honey','tea-tisanes'].map(id=>store.categories.find(c=>c.id===id)).filter(Boolean).map(c=>link(c,true)).join('');
+    $('#footer-categories').innerHTML=['natural-oils','herbs-spices','honey','natural-soap'].map(id=>store.categories.find(c=>c.id===id)).filter(Boolean).map(c=>link(c)).join('');
+    $('#category-menu').innerHTML=store.categories.map(c=>`<a href="${homeURL({categorie:c.id})}" data-category="${escape(c.id)}"><img src="${escape(categoryImage(c))}" width="36" height="36" alt="" loading="lazy"><span>${escape(c[language])}</span></a>`).join('');
+    const cards=store.categories.map(c=>`<a class="category-card" href="${homeURL({categorie:c.id})}" data-category="${escape(c.id)}" dir="${language==='ar'?'rtl':'ltr'}"><img src="${escape(categoryImage(c))}" width="150" height="112" alt="" loading="lazy"><span>${escape(c[language])}</span></a>`).join('');
     if(!$('#category-track'))return;
     $('#category-track').innerHTML=`<div class="category-group">${cards}</div><div class="category-group" aria-hidden="true">${cards.replaceAll('<a ', '<a tabindex="-1" ')}</div>`;
     const firstGroup=$('#category-track .category-group');
@@ -119,8 +119,8 @@
     $('#empty-title').textContent=searchQuery?t('noResults'):t('emptyTitle');
     $('#empty-description').textContent=searchQuery?t('noResultsText'):cat?t('categoryEmpty'):t('emptyDescription');
     $('#reset-catalog').hidden=!selectedCategory&&!searchQuery;
-    const tabs=[{id:'',label:t('all')},...['natural-oils','herbs-spices'].map(id=>({id,label:store.categories.find(c=>c.id===id)[language]}))];
-    $('#catalog-tabs').innerHTML=tabs.map(tab=>`<button type="button" data-filter="${tab.id}" aria-pressed="${tab.id===selectedCategory&&!searchQuery}">${tab.label}</button>`).join('');
+    const tabs=[{id:'',label:t('all')},...store.categories.map(c=>({id:c.id,label:c[language]}))];
+    $('#catalog-tabs').innerHTML=tabs.map(tab=>`<button type="button" data-filter="${escape(tab.id)}" aria-pressed="${tab.id===selectedCategory&&!searchQuery}">${escape(tab.label)}</button>`).join('');
     window.BADIL_COMMERCE?.render(window.BADIL_VIEW);
   }
   function filterCategory(id) {
@@ -193,6 +193,7 @@
     if(strip)requestAnimationFrame(animateCategories);
   }
   document.addEventListener('visibilitychange',()=>{lastFrame=performance.now();restartHeroTimer();});
+  window.addEventListener('badil:categories',()=>{renderCategories();renderCatalog();});
   reducedMotion.addEventListener('change',event=>{heroPaused=event.matches;categoryPaused=event.matches;updatePauseControls();restartHeroTimer();});
   $$('dialog').forEach(dialog=>{
     dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}});

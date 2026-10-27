@@ -4,6 +4,7 @@ import locations from '../locations.json' with {type:'json'};
 import {normalizeProductInput,validateImageBytes,MAX_IMAGE_BYTES} from './products.mjs';
 import {mediaImageKey} from '../product-data.mjs';
 import {adminProfileHasAccess,deleteAdminUser} from './users.mjs';
+import {mergeCategories,normalizeCategoryInput} from './categories.mjs';
 
 const PROJECT='badeldz';
 const FS=`https://firestore.googleapis.com/v1/projects/${PROJECT}/databases/(default)/documents`;
@@ -123,7 +124,7 @@ async function submitOrder(request,env){
     const items=calculateLines(body.items,products),changes=stockChanges(items,products),pending=items.some(i=>i.unitPrice===null),knownSubtotal=items.reduce((sum,item)=>sum+(item.lineTotal||0),0),subtotal=pending?null:knownSubtotal,deliveryFee=resolveDelivery(customer,knownSubtotal,rate?[rate]:[]),total=subtotal===null||deliveryFee===null?null:subtotal+deliveryFee;
     if(total!==null&&body.quotedTotal!==null&&body.quotedTotal!==total)fail(409,'PRICE_CHANGED','Les tarifs ont été actualisés. Vérifiez votre panier avant de confirmer.',{subtotal,deliveryFee,total});
     const status=pending||deliveryFee===null||body.quotedTotal===null?'needs_quote':'new',order={id:key,reference:'BD-'+now().slice(2,10).replaceAll('-','')+'-'+key.slice(0,7).toUpperCase(),createdAt:now(),updatedAt:now(),status,customer,items,subtotal,knownSubtotal,deliveryFee,total,locale:body.locale==='fr'?'fr':'ar',paymentMethod:'cash_on_delivery',adminNotes:'',requestHash,stockState:'reserved',stockReservations:changes.map(({productId,quantity})=>({productId,quantity}))};
-    try{await commit(env,[{update:{name:ROOT+'/orders/'+key,fields:fields(order)},currentDocument:{exists:false}},...inventoryWrites(changes,snapshots)]);if(changes.length)await caches.default.delete(catalogCacheKey(request));return publicOrder(order);}
+    try{await commit(env,[{update:{name:ROOT+'/orders/'+key,fields:fields(order)},currentDocument:{exists:false}},...inventoryWrites(changes,snapshots)]);return publicOrder(order);}
     catch(error){if(!['ALREADY_EXISTS','WRITE_CONFLICT'].includes(error.code))throw error;const old=await duplicate();if(old)return publicOrder(old);if(attempt===2)fail(409,'STOCK_CHANGED','Le stock a changé. Actualisez votre panier et réessayez.');}
   }
 }
@@ -139,22 +140,39 @@ async function updateOrder(request,env,id,user){
     let changes=[],snapshots=[];const reservations=old.stockReservations||[],release=order.status==='cancelled'&&old.stockState==='reserved',reserve=order.status!=='cancelled'&&old.stockState==='released';
     if(reservations.length&&(release||reserve)){snapshots=await Promise.all(reservations.map(r=>snapshot(env,'products/'+r.productId)));changes=stockChanges(reservations,snapshots.filter(Boolean).map(s=>s.data),release);if(reserve)order.stockReservations=changes.map(({productId,quantity})=>({productId,quantity}));}
     if(release||reserve)order.stockState=release?'released':'reserved';
-    try{await commit(env,[{update:{name:previous.raw.name,fields:fields(order)},currentDocument:{updateTime:previous.raw.updateTime}},...inventoryWrites(changes,snapshots)]);if(changes.length)await caches.default.delete(catalogCacheKey(request));return order;}
+    try{await commit(env,[{update:{name:previous.raw.name,fields:fields(order)},currentDocument:{updateTime:previous.raw.updateTime}},...inventoryWrites(changes,snapshots)]);return order;}
     catch(error){if(error.code!=='WRITE_CONFLICT'||attempt===2)throw error;}
   }
 }
 async function saveProduct(request,env,user,id=null){
   allowRoles(user,['owner','admin','manager']);
-  const body=await readBody(request),origin=new URL(request.url).origin;
+  const body=await readBody(request,120000),origin=new URL(request.url).origin;
   let existing=null,previous=null;
   if(id){previous=await snapshot(env,'products/'+id);existing=previous?.data;if(!existing)fail(404,'NOT_FOUND','Produit introuvable.');}
   else{id=body.id||('p-'+Date.now()+String(crypto.getRandomValues(new Uint32Array(1))[0]%1000000).padStart(6,'0'));if(!/^p-\d{16,24}$/.test(id))fail(400,'INVALID_PRODUCT_ID','Identifiant du produit invalide.');const duplicate=await getDoc(env,'products/'+id);if(duplicate){if(duplicate.createdBy===user.uid)return duplicate;fail(409,'ALREADY_EXISTS','Cette référence existe déjà.');}}
   if(existing&&body.stock!==undefined&&Object.hasOwn(body,'expectedStock')&&(existing.stock??null)!==body.expectedStock)fail(409,'STOCK_CHANGED','Le stock a changé depuis l’ouverture de cette fiche. Actualisez le produit.');
-  const product=normalizeProductInput(body,origin,existing);for(const image of productImages(product)){const key=mediaImageKey(image,origin);if(key&&!await getDoc(env,'media/'+key.split('.')[0]))fail(400,'INVALID_IMAGE','Téléversez les photos avant d’enregistrer le produit.');}
+  const categories=mergeCategories(await listDocs(env,'categories'));
+  const product=normalizeProductInput(body,origin,existing,categories.map(c=>c.id));for(const image of productImages(product)){const key=mediaImageKey(image,origin);if(key&&!await getDoc(env,'media/'+key.split('.')[0]))fail(400,'INVALID_IMAGE','Téléversez les photos avant d’enregistrer le produit.');}
   Object.assign(product,{id,sourceId:existing?.sourceId||Date.now(),createdAt:existing?.createdAt||now(),updatedAt:now(),updatedBy:user.uid});
   if(!existing)product.createdBy=user.uid;
   if(existing)await commit(env,[{update:{name:previous.raw.name,fields:fields(product)},currentDocument:{updateTime:previous.raw.updateTime}}]);else await createDoc(env,'products',id,product);
-  await caches.default.delete(catalogCacheKey(request));return product;
+  return product;
+}
+async function saveCategory(request,env,user,id=null){
+  allowRoles(user,['owner','admin','manager']);
+  const body=await readBody(request),origin=new URL(request.url).origin;
+  const categories=mergeCategories(await listDocs(env,'categories'));
+  const existing=id?categories.find(c=>c.id===id):null;
+  if(id&&!existing)fail(404,'NOT_FOUND','Catégorie introuvable.');
+  if(!id){id=body.id;if(typeof id!=='string'||!/^cat-[a-f0-9-]{36}$/i.test(id))fail(400,'INVALID_CATEGORY','Identifiant de catégorie invalide.');}
+  const category=normalizeCategoryInput(body,origin,existing);
+  const key=mediaImageKey(category.image,origin);if(key&&!await getDoc(env,'media/'+key.split('.')[0]))fail(400,'INVALID_IMAGE','Téléversez la photo avant d’enregistrer la catégorie.');
+  const duplicate=categories.find(c=>c.id!==id&&(c.fr.toLocaleLowerCase('fr')===category.fr.toLocaleLowerCase('fr')||c.ar===category.ar));
+  if(duplicate)fail(409,'CATEGORY_EXISTS','Une catégorie porte déjà ce nom. Modifiez-la depuis la liste.');
+  Object.assign(category,{id,updatedAt:now(),updatedBy:user.uid});
+  if(!existing)category.createdAt=now();
+  await setDoc(env,'categories/'+id,category);
+  return category;
 }
 async function uploadProductImage(request,env,user,ctx){
   allowRoles(user,['owner','admin','manager']);if(!env.PRODUCT_MEDIA)fail(503,'STORAGE_UNAVAILABLE','Le stockage des photos est indisponible.');
@@ -184,6 +202,7 @@ async function deleteUnusedImage(request,env,user,key){
   if(media.uploadedBy!==user.uid&&!['owner','admin'].includes(user.role))fail(403,'ACCESS_DENIED','Cette photo appartient à un autre utilisateur.');
   const rows=await google(env,FS+':runQuery','POST',{structuredQuery:{from:[{collectionId:'products'}],where:{compositeFilter:{op:'OR',filters:[{fieldFilter:{field:{fieldPath:'image'},op:'EQUAL',value:{stringValue:media.image}}},{fieldFilter:{field:{fieldPath:'images'},op:'ARRAY_CONTAINS',value:{stringValue:media.image}}}]}},limit:1}});
   if(rows.some(row=>row.document))fail(409,'IMAGE_IN_USE','Cette photo est utilisée par un produit.');
+  const categories=await listDocs(env,'categories');if(categories.some(c=>c.image===media.image))fail(409,'IMAGE_IN_USE','Cette photo est utilisée par une catégorie.');
   await env.PRODUCT_MEDIA.delete(key);await google(env,FS+'/media/'+id,'DELETE');await caches.default.delete(new Request(new URL('/media/'+key,request.url).href));return {ok:true};
 }
 async function manageUsers(request,env,user,id){
@@ -216,16 +235,16 @@ async function manageUsers(request,env,user,id){
   if(Object.keys(changes).length>1)await google(env,`${AUTH}/accounts:update`,'POST',changes);
   target.updatedAt=now();await commit(env,[{update:{name:ROOT+'/users/'+id,fields:fields(target)},currentDocument:{updateTime:targetSnapshot.raw.updateTime}}]);return target;
 }
-const catalogCacheKey=request=>new Request(new URL('/api/cache/catalog',request.url).href);
 async function route(request,env,ctx){
   const url=new URL(request.url),path=url.pathname;
   const mediaKey=path.match(/^\/media\/([a-f0-9-]{36}\.(?:webp|png|jpg))$/i)?.[1];if(mediaKey&&['GET','HEAD'].includes(request.method))return serveProductImage(request,env,mediaKey,ctx);
   if(path==='/api/health')return {ok:true,project:PROJECT,database:'Firestore'};
   const publicProductId=path.match(/^\/api\/products\/(p-\d{1,64})$/)?.[1];if(publicProductId&&request.method==='GET'){const product=await getDoc(env,'products/'+publicProductId);if(!product)fail(404,'NOT_FOUND','Produit introuvable.');return {product};}
   if(path==='/api/catalog'&&request.method==='GET'){
-    const key=catalogCacheKey(request);const fresh=url.searchParams.get('fresh')==='1';const cached=!fresh&&await caches.default.match(key);if(cached)return cached.json();
-    const [products,deliveryRates]=await Promise.all([listDocs(env,'products'),listDocs(env,'deliveryRates')]);const result={products,deliveryRates,freeDelivery:{wilaya:'35',commune:'3528',threshold:4000}};
-    ctx.waitUntil(caches.default.put(key,new Response(JSON.stringify(result),{headers:{'Content-Type':'application/json','Cache-Control':'public,max-age=120'}})));return result;
+    // Read the authoritative data after every navigation; edge caches previously
+    // kept old photos/prices visible at other locations after an admin save.
+    const [products,deliveryRates,categories]=await Promise.all([listDocs(env,'products'),listDocs(env,'deliveryRates'),listDocs(env,'categories')]);
+    return {products,deliveryRates,categories:mergeCategories(categories),freeDelivery:{wilaya:'35',commune:'3528',threshold:4000}};
   }
   if(path==='/api/orders'&&request.method==='POST')return submitOrder(request,env);
   if(!path.startsWith('/api/admin/'))fail(404,'NOT_FOUND','Page introuvable.');
@@ -233,6 +252,9 @@ async function route(request,env,ctx){
   if(path==='/api/admin/uploads'&&request.method==='POST')return uploadProductImage(request,env,user,ctx);
   const unusedImage=path.match(/^\/api\/admin\/uploads\/([a-f0-9-]{36}\.(?:webp|png|jpg))$/i)?.[1];if(unusedImage&&request.method==='DELETE')return deleteUnusedImage(request,env,user,unusedImage);
   if(path==='/api/admin/me')return {user};
+  if(path==='/api/admin/categories'&&request.method==='GET'){allowRoles(user,['owner','admin','manager']);return {categories:mergeCategories(await listDocs(env,'categories'))};}
+  if(path==='/api/admin/categories'&&request.method==='POST')return saveCategory(request,env,user);
+  const categoryId=path.match(/^\/api\/admin\/categories\/([a-z0-9-]{1,64})$/)?.[1];if(categoryId&&request.method==='PATCH')return saveCategory(request,env,user,categoryId);
   if(path==='/api/admin/orders'&&request.method==='GET'){
     const rows=await google(env,`${FS}:runQuery`,'POST',{structuredQuery:{from:[{collectionId:'orders'}],orderBy:[{field:{fieldPath:'createdAt'},direction:'DESCENDING'}],limit:500}});return {orders:(rows||[]).filter(r=>r.document).map(r=>documentData(r.document))};
   }
@@ -242,7 +264,7 @@ async function route(request,env,ctx){
   const productId=path.match(/^\/api\/admin\/products\/(p-\d+)$/)?.[1];if(productId&&request.method==='PATCH')return saveProduct(request,env,user,productId);
   if(path==='/api/admin/delivery'){
     allowRoles(user,['owner','admin','manager']);if(request.method==='GET')return {rates:await listDocs(env,'deliveryRates')};
-    if(request.method==='PUT'){const {rates}=await readBody(request);if(!Array.isArray(rates)||rates.length!==69||new Set(rates.map(r=>r.code)).size!==69)fail(400,'INVALID_RATES','Les 69 wilayas doivent être renseignées une seule fois.');const writes=rates.map(rate=>{const wilaya=locations.find(w=>w.code===rate.code);if(!wilaya||!validPrice(rate.home)||!validPrice(rate.desk)||typeof rate.enabled!=='boolean')fail(400,'INVALID_RATES','Tarif ou wilaya invalide.');return{update:{name:`${ROOT}/deliveryRates/${rate.code}`,fields:fields({code:rate.code,name:wilaya.name,home:rate.home,desk:rate.desk,enabled:rate.enabled,updatedAt:now()})}};});await commit(env,writes);await caches.default.delete(catalogCacheKey(request));return {ok:true};}
+    if(request.method==='PUT'){const {rates}=await readBody(request);if(!Array.isArray(rates)||rates.length!==69||new Set(rates.map(r=>r.code)).size!==69)fail(400,'INVALID_RATES','Les 69 wilayas doivent être renseignées une seule fois.');const writes=rates.map(rate=>{const wilaya=locations.find(w=>w.code===rate.code);if(!wilaya||!validPrice(rate.home)||!validPrice(rate.desk)||typeof rate.enabled!=='boolean')fail(400,'INVALID_RATES','Tarif ou wilaya invalide.');return{update:{name:`${ROOT}/deliveryRates/${rate.code}`,fields:fields({code:rate.code,name:wilaya.name,home:rate.home,desk:rate.desk,enabled:rate.enabled,updatedAt:now()})}};});await commit(env,writes);return {ok:true};}
   }
   if(path==='/api/admin/users'&&['GET','POST'].includes(request.method))return manageUsers(request,env,user);
   const userId=path.match(/^\/api\/admin\/users\/([A-Za-z0-9_-]{1,128})$/)?.[1];if(userId&&['PATCH','DELETE'].includes(request.method))return manageUsers(request,env,user,userId);

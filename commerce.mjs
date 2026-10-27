@@ -37,7 +37,7 @@ function render(view=state.view){
   $('#product-grid').innerHTML=list.slice(0,state.limit).map(card).join('');
   $('#catalog-toolbar').hidden=!count;$('#catalog-toolbar').innerHTML=`<span><bdi dir="ltr" class="latin-data">${count}</bdi> ${t('references')}</span><label>${t('sort')} <select id="catalog-sort"><option value="featured">${t('featured')}</option><option value="priceAsc">${t('priceAsc')}</option><option value="priceDesc">${t('priceDesc')}</option><option value="name">${t('name')}</option></select></label>`;$('#catalog-sort')&&($('#catalog-sort').value=state.sort);
   $('#load-more-products').hidden=count<=state.limit;$('#load-more-products').textContent=`${t('more')} (${Math.min(state.limit,count)} / ${count})`;
-  const cats=window.BADIL_STORE.categories.filter(c=>['honey','black-seed-oil','hair-oils','natural-oils','tea-tisanes'].includes(c.id));
+  const cats=window.BADIL_STORE.categories;
   $('#catalog-tabs').innerHTML=[{id:'',label:t('all')},...cats.map(c=>({id:c.id,label:c[lang()]}))].map(c=>`<button type="button" data-filter="${c.id}" aria-pressed="${view.category===c.id}">${e(c.label)}</button>`).join('');updateCount();
 }
 function renderProductPage(id){
@@ -144,7 +144,7 @@ function renderPage(){
 const searchInput=$('#site-search'),searchForm=searchInput.closest('form');
 const suggestions=document.createElement('div');suggestions.id='search-suggestions';suggestions.className='search-suggestions';suggestions.hidden=true;suggestions.setAttribute('role','region');searchForm.append(suggestions);searchInput.setAttribute('aria-controls','search-suggestions');searchInput.setAttribute('aria-expanded','false');searchInput.setAttribute('autocomplete','off');
 function showSuggestions(){
-  const query=normal(searchInput.value.trim());const categories=window.BADIL_STORE.categories.filter(c=>state.products.some(p=>p.categories.includes(c.id))&&(!query||normal(c.fr+' '+c.ar).includes(query)));
+  const query=normal(searchInput.value.trim());const categories=window.BADIL_STORE.categories.filter(c=>!query||normal(c.fr+' '+c.ar).includes(query));
   const products=state.products.filter(p=>!query||normal(p.name.fr+' '+p.name.ar).includes(query)||p.categories.some(id=>categories.some(c=>c.id===id))).sort((a,b)=>Number(b.isHoney)-Number(a.isHoney)||b.sourceId-a.sourceId).slice(0,5);
   suggestions.setAttribute('aria-label',t('searchShort')||t('products'));
   suggestions.innerHTML=(categories.length?'<div class="search-suggestion-heading">'+t('relatedCategories')+'</div><div class="search-category-chips">'+categories.map(c=>'<a href="'+homeURL({categorie:c.id})+'">'+e(c[lang()])+'</a>').join('')+'</div>':'')+'<div class="search-suggestion-heading"><span>'+t('relatedProducts')+'</span><a href="'+homeURL({q:searchInput.value.trim()})+'#catalog">'+t('seeAll')+'</a></div>'+(products.length?products.map(p=>'<a class="search-product-row" href="'+productURL(p.id)+'"><img src="'+image(p)+'" alt="" width="48" height="48"><div><strong>'+e(p.name[lang()])+'</strong><small>'+e(window.BADIL_STORE.categories.find(c=>c.id===p.categories[0])?.[lang()]||'')+'</small></div><span dir="ltr">'+money(p.price)+'</span></a>').join(''):'<p class="search-empty">'+t('noResults')+'</p>');
@@ -164,5 +164,16 @@ function rerenderProduct(){
   if(quantity&&$('#detail-quantity'))$('#detail-quantity').value=quantity;
   if(photo&&productImages(state.selectedProduct)[Number(photo)]){$('#detail-main-photo').src=productImageUrl(productImages(state.selectedProduct)[Number(photo)],window.BADIL_API);$$('[data-detail-photo]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.detailPhoto===photo)));}
 }
-async function refreshCatalog(fresh=false){const result=await api('/api/catalog'+(fresh?'?fresh=1':''));if(!Array.isArray(result.products)||!result.products.length)throw new Error('Catalogue indisponible');state.products=result.products;remoteLoaded=true;state.rates=result.deliveryRates||[];window.BADIL_STORE.products=state.products;if(page==='product')rerenderProduct();else{if(['cart','wishlist'].includes(page)||(page==='checkout'&&!$('#order-form')))state.pageRendered=null;render();}if(page==='checkout')updateOrderSummary();}
+let refreshingCatalog=null,lastCatalogRefresh=0;
+async function refreshCatalog(fresh=false){
+  if(refreshingCatalog)return refreshingCatalog;
+  refreshingCatalog=(async()=>{const result=await api('/api/catalog'+(fresh?'?fresh=1':''));if(!Array.isArray(result.products))throw new Error('Catalogue indisponible');
+    state.products=result.products;remoteLoaded=true;state.rates=result.deliveryRates||[];window.BADIL_STORE.products=state.products;
+    if(Array.isArray(result.categories)){const changed=JSON.stringify(window.BADIL_STORE.categories)!==JSON.stringify(result.categories);window.BADIL_STORE.categories=result.categories;if(changed)window.dispatchEvent(new Event('badil:categories'));}
+    if(page==='product')rerenderProduct();else{if(['cart','wishlist'].includes(page)||(page==='checkout'&&!$('#order-form')))state.pageRendered=null;render();}if(page==='checkout')updateOrderSummary();lastCatalogRefresh=Date.now();
+  })();try{return await refreshingCatalog;}finally{refreshingCatalog=null;}
+}
+try{const channel=new BroadcastChannel('badil-catalog');channel.onmessage=()=>refreshCatalog(true).catch(()=>{});}catch{}
+const refreshOnReturn=()=>{if(!document.hidden&&Date.now()-lastCatalogRefresh>5000)refreshCatalog(true).catch(()=>{});};
+window.addEventListener('focus',refreshOnReturn);document.addEventListener('visibilitychange',refreshOnReturn);
 try{const [products,locations]=await Promise.all([fetch('catalog.json?v=3').then(r=>r.json()),fetch('locations.json?v=2').then(r=>r.json())]);state.products=products;products.forEach(p=>staticProductIds.add(p.id));state.locations=locations;render(window.BADIL_VIEW||state.view);updateCount();const product=new URL(location.href).searchParams.get('product');if(product)location.replace(productURL(product));await refreshCatalog();if(page==='product'&&/^p-\d{1,64}$/.test(pageProduct)){try{const {product:current}=await api('/api/products/'+pageProduct);state.products=state.products.some(p=>p.id===current.id)?state.products.map(p=>p.id===current.id?current:p):[current,...state.products];rerenderProduct();}catch{}}}catch(error){if(state.products.length)render();else if(page!=='home'){$('#page-content').innerHTML=emptyPage(t('error'));}else{$('#empty-title').textContent=t('noResults');$('#empty-description').textContent=t('error');}}
