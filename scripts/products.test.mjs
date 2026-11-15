@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {normalizeProductInput,validateImageBytes,MAX_IMAGE_BYTES} from '../worker/products.mjs';
 import {summarizeProduct,mediaImageKey,productImageUrl} from '../product-data.mjs';
+import {normalizeDescription,MAX_DESCRIPTION_LENGTH} from '../product-description.mjs';
 const origin='https://badil-api.mimflo-renolix.workers.dev';
 const photo=origin+'/media/11111111-2222-4333-8444-555555555555.webp';
 const input=()=>({name:{fr:'Huile naturelle',ar:'زيت طبيعي'},shortDescription:{fr:'Une huile pour vos soins quotidiens.',ar:'زيت للعناية اليومية.'},description:{fr:['Présentation détaillée du produit.'],ar:['وصف مفصل للمنتج.']},categories:['natural-oils'],image:photo,variantPrices:{standard:900},available:true});
@@ -14,3 +15,30 @@ test('image references reject foreign hosts, scripts, traversal, queries and fra
 test('short descriptions prefer editorial text and fallback summaries stay short',()=>{assert.equal(summarizeProduct({shortDescription:{fr:'Présentation courte'},description:{fr:['Longue description.']}},'fr'),'Présentation courte');assert.equal(summarizeProduct({description:{fr:['Une première phrase. Une autre phrase.']}},'fr'),'Une première phrase.');assert.ok(summarizeProduct({description:{fr:['mot '.repeat(200)]}},'fr').length<=261);});
 test('photo validation accepts a real local PNG and rejects mislabeled or oversized data',async()=>{const bytes=new Uint8Array(await readFile(new URL('../assets/honey/honey-256.png',import.meta.url)));assert.equal(validateImageBytes(bytes,'image/png'),'png');assert.throws(()=>validateImageBytes(bytes,'image/jpeg'),{code:'INVALID_IMAGE'});assert.throws(()=>validateImageBytes(new TextEncoder().encode('<svg onload="alert(1)"></svg>'),'image/png'),{code:'INVALID_IMAGE'});assert.throws(()=>validateImageBytes(new Uint8Array(MAX_IMAGE_BYTES+1),'image/png'),{code:'IMAGE_TOO_LARGE'});});
 test('media URLs cannot carry credentials or raw HTML attribute delimiters',()=>{for(const image of [photo.replace('https://','https://user@'),photo.replace('https://','https://foo" onerror="alert(1)@'),' '+photo]){assert.equal(mediaImageKey(image,origin),null);assert.equal(productImageUrl(image,origin),'assets/logo.png');}});
+
+test('both descriptions accept more than eight paragraphs on creation and full editor updates',()=>{
+  const description={fr:Array.from({length:12},(_,i)=>`Paragraphe ${i+1} : présentation du produit.`),ar:Array.from({length:15},(_,i)=>`فقرة ${i+1} : وصف المنتج وطريقة استخدامه.`)};
+  const created=normalizeProductInput({...input(),description},origin);assert.deepEqual(created.description,description);
+  const edited=normalizeProductInput({...input(),description,available:false},origin,created);assert.deepEqual(edited.description,description);assert.equal(edited.available,false);assert.equal(edited.price,900);
+});
+test('pasted Windows and phone text preserves every nonempty paragraph without a count limit',()=>{
+  for(const separator of ['\n\n','\r\n\r\n','\r\r','\n \t\n']){
+    const paragraphs=Array.from({length:20},(_,i)=>`Description ${i+1}`);
+    assert.deepEqual(normalizeDescription('  '+paragraphs.join(separator)+'  ','fr'),paragraphs);
+  }
+  assert.deepEqual(normalizeDescription(['','  وصف المنتج  ','\n\n','فقرة ثانية'],'ar'),['وصف المنتج','فقرة ثانية']);
+});
+test('long single paragraphs are accepted; oversized text names the real language and size limit',()=>{
+  const long='ز'.repeat(6000);assert.deepEqual(normalizeDescription(long,'ar'),[long]);
+  assert.equal(normalizeDescription('a'.repeat(MAX_DESCRIPTION_LENGTH),'fr')[0].length,MAX_DESCRIPTION_LENGTH);
+  assert.throws(()=>normalizeDescription('a'.repeat(MAX_DESCRIPTION_LENGTH+1),'fr'),error=>error.code==='INVALID_DESCRIPTION'&&error.message.includes('française')&&error.message.includes('32 000'));
+});
+test('missing or invalid translations name the exact field and never alter the saved product',()=>{
+  const saved=normalizeProductInput(input(),origin),before=structuredClone(saved);
+  for(const locale of ['fr','ar']){
+    const description={...input().description,[locale]:[' ','\n\n']};
+    assert.throws(()=>normalizeProductInput({description},origin,saved),error=>error.code==='INVALID_DESCRIPTION'&&error.message.includes(locale==='ar'?'arabe':'française'));
+    assert.deepEqual(saved,before);
+  }
+  for(const bad of [42,{},['valid',null],['valid',{}]])assert.throws(()=>normalizeDescription(bad,'fr'),{code:'INVALID_DESCRIPTION'});
+});

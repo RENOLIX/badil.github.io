@@ -1,4 +1,4 @@
-import {createProductEditor,adminImage} from './product-editor.mjs?v=3';
+import {createProductEditor,adminImage} from './product-editor.mjs?v=4';
 import {createCategoryEditor} from './category-editor.mjs?v=1';
 import {mergeCategories} from '../category-data.mjs?v=1';
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js';

@@ -1,4 +1,5 @@
 import {CATEGORY_IDS,summarizeProduct,localProductImage,mediaImageKey,buildCustomVariants,productImages,saleType} from '../product-data.mjs';
+import {normalizeDescription} from '../product-description.mjs';
 class ProductError extends Error{constructor(code,message,status=400){super(message);Object.assign(this,{code,status});}}
 const reject=(code,message,status)=>{throw new ProductError(code,message,status);};
 function text(value,label,min=2,max=400){if(typeof value!=='string'||value.trim().length<min||value.trim().length>max||/[\u0000-\u0008]/.test(value))reject('INVALID_FIELD','Champ invalide : '+label);return value.trim();}
@@ -20,8 +21,8 @@ export function normalizeProductInput(body,origin,existing=null,categoryIds=CATE
     }else{product.optionGroups=[];product.variants=(format==='honey'?[{id:'125g',label:'125 g'},{id:'250g',label:'250 g'},{id:'500g',label:'500 g'},{id:'1kg',label:'1 kg'}]:[{id:'standard',label:''}]).map(v=>({...v,price:existing?.variants.find(old=>old.id===v.id)?.price??null}));}
     product.formatType=format;
   }
-  if(body.description){product.description={};for(const locale of ['fr','ar']){const list=body.description[locale];if(!Array.isArray(list)||list.length<1||list.length>8)reject('INVALID_DESCRIPTION','Ajoutez une description dans les deux langues.');product.description[locale]=list.map(p=>text(p,'description',1,4000));}}
-  if(!product.description)reject('INVALID_DESCRIPTION','Les descriptions française et arabe sont requises.');
+  if(body.description!==undefined){product.description={};for(const locale of ['fr','ar'])product.description[locale]=normalizeDescription(body.description?.[locale],locale);}
+  if(!product.description)reject('INVALID_DESCRIPTION','Renseignez les descriptions détaillées française et arabe.');
   if(body.shortDescription)product.shortDescription={fr:text(body.shortDescription.fr,'description courte française',2,400),ar:text(body.shortDescription.ar,'description courte arabe',2,400)};
   else if(!product.shortDescription)product.shortDescription={fr:summarizeProduct(product,'fr'),ar:summarizeProduct(product,'ar')};
   if(body.variantPrices){if(typeof body.variantPrices!=='object'||Array.isArray(body.variantPrices))reject('INVALID_PRICE','Prix invalides.');for(const variant of product.variants){if(Object.hasOwn(body.variantPrices,variant.id)){const price=body.variantPrices[variant.id];if(!priceValid(price))reject('INVALID_PRICE','Le prix doit être un montant en DA ou rester vide.');variant.price=price;}}}

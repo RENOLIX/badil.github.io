@@ -99,3 +99,17 @@ test('every legacy catalog product supports a full editor save followed by a pho
     const photoEdit=normalizeProductInput({images:['assets/logo.png']},origin,updated);assert.equal(photoEdit.price,product.price,product.id);assert.equal(photoEdit.name.fr,product.name.fr);assert.equal(photoEdit.image,'assets/logo.png');assert.deepEqual(photoEdit.description,product.description);
   }
 });
+test('product API creates and edits bilingual descriptions with many paragraphs and pasted text',async()=>withApi(async({call})=>{
+  const description={fr:Array.from({length:12},(_,i)=>`Paragraphe français ${i+1}.`),ar:Array.from({length:14},(_,i)=>`فقرة عربية ${i+1}.`)};
+  const product={...catalog[0],id:'p-1793000000123456790',description,formatType:'unit',referenceVariantId:'standard',variantPrices:{standard:900},stock:7};
+  const created=await call('admin/products','POST',product);assert.equal(created.status,200,JSON.stringify(created.body));assert.deepEqual(created.body.description,description);
+  const changed={fr:[...description.fr,'Texte ajouté à la modification.'],ar:[...description.ar,'فقرة مضافة عند التعديل.']};
+  const edited=await call('admin/products/'+product.id,'PATCH',{description:{fr:changed.fr.join('\r\n\r\n'),ar:changed.ar}});assert.equal(edited.status,200,JSON.stringify(edited.body));assert.deepEqual(edited.body.description,changed);
+  const fresh=await call('products/'+product.id,'GET',undefined,false);assert.deepEqual(fresh.body.product.description,changed);
+}));
+test('API identifies the empty description language and keeps existing data when validation fails',async()=>withApi(async({call,put})=>{
+  const product=catalog[0];put('products/'+product.id,product);
+  const invalid=await call('admin/products/'+product.id,'PATCH',{description:{fr:Array(12).fill('Description française complète.'),ar:[' ']}});
+  assert.equal(invalid.status,400);assert.equal(invalid.body.error.code,'INVALID_DESCRIPTION');assert.match(invalid.body.error.message,/détaillée arabe/);
+  const current=await call('products/'+product.id,'GET',undefined,false);assert.deepEqual(current.body.product.description,product.description);
+}));

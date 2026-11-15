@@ -1,4 +1,4 @@
-import {adminImage} from './product-editor.mjs?v=3';
+import {adminImage} from './product-editor.mjs?v=4';
 import {optimizePhoto} from './media.mjs?v=1';
 import {mediaImageKey} from '../product-data.mjs?v=2';
 const $=s=>document.querySelector(s),e=value=>String(value??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');

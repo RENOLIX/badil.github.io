@@ -146,7 +146,7 @@ async function updateOrder(request,env,id,user){
 }
 async function saveProduct(request,env,user,id=null){
   allowRoles(user,['owner','admin','manager']);
-  const body=await readBody(request,120000),origin=new URL(request.url).origin;
+  const body=await readBody(request,300000),origin=new URL(request.url).origin;
   let existing=null,previous=null;
   if(id){previous=await snapshot(env,'products/'+id);existing=previous?.data;if(!existing)fail(404,'NOT_FOUND','Produit introuvable.');}
   else{id=body.id||('p-'+Date.now()+String(crypto.getRandomValues(new Uint32Array(1))[0]%1000000).padStart(6,'0'));if(!/^p-\d{16,24}$/.test(id))fail(400,'INVALID_PRODUCT_ID','Identifiant du produit invalide.');const duplicate=await getDoc(env,'products/'+id);if(duplicate){if(duplicate.createdBy===user.uid)return duplicate;fail(409,'ALREADY_EXISTS','Cette référence existe déjà.');}}
